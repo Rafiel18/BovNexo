@@ -1,17 +1,160 @@
-# React + Vite
+# BovNexo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**BovNexo** é uma aplicação web para gestão sanitária, operacional e reprodutiva de propriedades rurais, conectando veterinários e produtores em um fluxo simples, prático e orientado à tomada de decisão.
 
-Currently, two official plugins are available:
+O projeto nasceu como um MVP voltado para a rotina de campo, com foco em grandes animais, especialmente bovinos.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Demo
 
-## React Compiler
+Acesse a versão online:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+https://bovnexo.vercel.app/
 
-## Expanding the ESLint configuration
+> A versão atual é uma demo/MVP em desenvolvimento. Use apenas dados fictícios para testes.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-"# BovNexo" 
+---
+
+## Objetivo do projeto
+
+O BovNexo foi criado para facilitar a comunicação entre veterinários e produtores rurais, centralizando informações importantes da propriedade, como:
+
+- produtores vinculados ao veterinário;
+- propriedades rurais;
+- tarefas sanitárias;
+- ocorrências de campo;
+- respostas e orientações veterinárias;
+- cadastro de animais;
+- histórico reprodutivo.
+
+A proposta é ser uma ferramenta simples, direta e útil no dia a dia do campo, evitando planilhas soltas, mensagens perdidas e falta de histórico.
+
+---
+
+## Funcionalidades atuais
+
+### Autenticação
+
+- Cadastro de usuários
+- Login
+- Separação de perfis:
+  - Veterinário
+  - Produtor rural
+
+### Painel do veterinário
+
+- Cadastro e edição de produtores
+- Cadastro e edição de propriedades
+- Criação de tarefas sanitárias
+- Visualização de tarefas cadastradas
+- Visualização de ocorrências enviadas pelo produtor
+- Resposta às ocorrências
+- Alteração de status das ocorrências:
+  - Aberta
+  - Em análise
+  - Resolvida
+- Cadastro de animais
+- Registro de eventos reprodutivos
+- Resumo geral com indicadores do painel
+
+### Painel do produtor
+
+- Visualização do vínculo com o produtor cadastrado
+- Visualização das propriedades vinculadas
+- Visualização de tarefas sanitárias
+- Marcação de tarefas como concluídas
+- Registro de ocorrências
+- Visualização da resposta do veterinário
+- Visualização de animais cadastrados
+- Visualização do histórico reprodutivo
+- Resumo com indicadores de tarefas, ocorrências e rebanho
+
+---
+
+## Módulo de reprodução
+
+O módulo de reprodução permite ao veterinário registrar informações importantes sobre os animais da propriedade.
+
+### Cadastro de animais
+
+Campos disponíveis:
+
+- Identificação
+- Nome ou apelido
+- Raça
+- Sexo
+- Categoria
+- Status
+- Data de nascimento
+- Propriedade vinculada
+
+### Eventos reprodutivos
+
+Eventos disponíveis:
+
+- Cio
+- Cobertura
+- Inseminação
+- Diagnóstico de gestação
+- Parto
+- Aborto
+- Observação
+
+O produtor consegue visualizar os animais e o histórico reprodutivo vinculados à sua propriedade.
+
+---
+
+## Tecnologias utilizadas
+
+### Frontend
+
+- React
+- Vite
+- JavaScript
+- Tailwind CSS
+
+### Backend e banco de dados
+
+- Supabase
+- Supabase Auth
+- PostgreSQL
+- Row Level Security, RLS
+
+### Deploy
+
+- Vercel
+
+### Versionamento
+
+- Git
+- GitHub
+
+---
+
+## Estrutura principal do projeto
+
+```txt
+src/
+  components/
+    ProducerReproductionModule.jsx
+    ReproductionModule.jsx
+
+  lib/
+    supabaseClient.js
+
+  pages/
+    AuthPage.jsx
+    ProducerDashboard.jsx
+    VetDashboard.jsx
+
+  services/
+    animal.js
+    occurrence.js
+    producer.js
+    profile.js
+    property.js
+    reproduction.js
+    supabaseAuth.js
+    task.js
+
+  utils/
+    formatters.js
