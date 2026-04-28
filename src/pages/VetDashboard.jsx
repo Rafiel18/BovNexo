@@ -1,20 +1,26 @@
 import { useEffect, useMemo, useState } from "react";
+import ReproductionModule from "../components/ReproductionModule";
+
 import {
   createProperty,
   getPropertiesByVet,
   updateProperty,
 } from "../services/property";
+
 import {
   createProducer,
   getProducersByVet,
   updateProducer,
 } from "../services/producer";
+
 import { createTask, getTasksByVet } from "../services/task";
+
 import {
   getOccurrencesByVet,
   updateOccurrenceResponse,
   updateOccurrenceStatus,
 } from "../services/occurrence";
+
 import {
   formatDateBR,
   getOccurrenceStatusBadgeClass,
@@ -121,6 +127,13 @@ function VetDashboard({ userData, authUser, onLogout }) {
   const [tasks, setTasks] = useState([]);
   const [occurrences, setOccurrences] = useState([]);
 
+  const [reproductionStats, setReproductionStats] = useState({
+    animals: 0,
+    activeAnimals: 0,
+    females: 0,
+    males: 0,
+  });
+
   const [loadingProperties, setLoadingProperties] = useState(true);
   const [loadingProducers, setLoadingProducers] = useState(true);
   const [loadingTasks, setLoadingTasks] = useState(true);
@@ -141,9 +154,11 @@ function VetDashboard({ userData, authUser, onLogout }) {
 
   const [producerSearch, setProducerSearch] = useState("");
   const [propertySearch, setPropertySearch] = useState("");
+
   const [taskSearch, setTaskSearch] = useState("");
   const [taskPropertyFilter, setTaskPropertyFilter] = useState("");
   const [taskStatusFilter, setTaskStatusFilter] = useState("");
+
   const [occurrenceSearch, setOccurrenceSearch] = useState("");
   const [occurrencePropertyFilter, setOccurrencePropertyFilter] = useState("");
   const [occurrenceStatusFilter, setOccurrenceStatusFilter] = useState("");
@@ -252,7 +267,9 @@ function VetDashboard({ userData, authUser, onLogout }) {
       setProperties(data);
     } catch (error) {
       console.error("Erro ao carregar propriedades:", error);
-      setPropertyMessage(error.message || "Não foi possível carregar as propriedades.");
+      setPropertyMessage(
+        error.message || "Não foi possível carregar as propriedades."
+      );
     } finally {
       setLoadingProperties(false);
     }
@@ -268,7 +285,9 @@ function VetDashboard({ userData, authUser, onLogout }) {
       setProducers(data);
     } catch (error) {
       console.error("Erro ao carregar produtores:", error);
-      setProducerMessage(error.message || "Não foi possível carregar os produtores.");
+      setProducerMessage(
+        error.message || "Não foi possível carregar os produtores."
+      );
     } finally {
       setLoadingProducers(false);
     }
@@ -303,10 +322,13 @@ function VetDashboard({ userData, authUser, onLogout }) {
       data.forEach((occurrence) => {
         mappedResponses[occurrence.id] = occurrence.vetResponse || "";
       });
+
       setOccurrenceResponses(mappedResponses);
     } catch (error) {
       console.error("Erro ao carregar ocorrências:", error);
-      setOccurrenceMessage(error.message || "Não foi possível carregar as ocorrências.");
+      setOccurrenceMessage(
+        error.message || "Não foi possível carregar as ocorrências."
+      );
     } finally {
       setLoadingOccurrences(false);
     }
@@ -314,6 +336,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
 
   useEffect(() => {
     if (!vetUid) return;
+
     loadProperties();
     loadProducers();
     loadTasks();
@@ -322,6 +345,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
 
   async function handlePropertySubmit(e) {
     e.preventDefault();
+
     setSavingProperty(true);
     setPropertyMessage("");
     setProducerMessage("");
@@ -365,6 +389,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
 
   async function handleProducerSubmit(e) {
     e.preventDefault();
+
     setSavingProducer(true);
     setProducerMessage("");
     setPropertyMessage("");
@@ -400,6 +425,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
 
   async function handleTaskSubmit(e) {
     e.preventDefault();
+
     setSavingTask(true);
     setTaskMessage("");
     setProducerMessage("");
@@ -505,13 +531,19 @@ function VetDashboard({ userData, authUser, onLogout }) {
     if (a.status === b.status) {
       return (a.date || "").localeCompare(b.date || "");
     }
+
     if (a.status === "pendente") return -1;
     if (b.status === "pendente") return 1;
+
     return 0;
   });
 
   const sortedOccurrences = [...occurrences].sort((a, b) => {
-    const order = { aberta: 0, em_analise: 1, resolvida: 2 };
+    const order = {
+      aberta: 0,
+      em_analise: 1,
+      resolvida: 2,
+    };
 
     if (order[a.status] === order[b.status]) {
       return (a.date || "").localeCompare(b.date || "");
@@ -608,8 +640,14 @@ function VetDashboard({ userData, authUser, onLogout }) {
 
   const totalProducers = producers.length;
   const totalProperties = properties.length;
-  const pendingTasksCount = tasks.filter((task) => task.status === "pendente").length;
-  const openOccurrencesCount = occurrences.filter((item) => item.status === "aberta").length;
+
+  const pendingTasksCount = tasks.filter(
+    (task) => task.status === "pendente"
+  ).length;
+
+  const openOccurrencesCount = occurrences.filter(
+    (item) => item.status === "aberta"
+  ).length;
 
   return (
     <div className="min-h-screen bg-zinc-100 px-4 py-8">
@@ -635,11 +673,24 @@ function VetDashboard({ userData, authUser, onLogout }) {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <SummaryCard label="Produtores" value={totalProducers} />
           <SummaryCard label="Propriedades" value={totalProperties} />
           <SummaryCard label="Tarefas pendentes" value={pendingTasksCount} />
-          <SummaryCard label="Ocorrências abertas" value={openOccurrencesCount} />
+          <SummaryCard
+            label="Ocorrências abertas"
+            value={openOccurrencesCount}
+          />
+          <SummaryCard
+            label="Animais cadastrados"
+            value={reproductionStats.animals}
+          />
+          <SummaryCard
+            label="Animais ativos"
+            value={reproductionStats.activeAnimals}
+          />
+          <SummaryCard label="Fêmeas" value={reproductionStats.females} />
+          <SummaryCard label="Machos" value={reproductionStats.males} />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
@@ -733,7 +784,9 @@ function VetDashboard({ userData, authUser, onLogout }) {
 
           <div className="rounded-2xl bg-white shadow-lg p-8">
             <h2 className="text-2xl font-bold text-zinc-800">
-              {editingPropertyId ? "Editar propriedade" : "Cadastrar propriedade"}
+              {editingPropertyId
+                ? "Editar propriedade"
+                : "Cadastrar propriedade"}
             </h2>
 
             <form onSubmit={handlePropertySubmit} className="mt-6 space-y-4">
@@ -929,6 +982,12 @@ function VetDashboard({ userData, authUser, onLogout }) {
           />
         </div>
 
+        <ReproductionModule
+          properties={properties}
+          vetUid={vetUid}
+          onStatsChange={setReproductionStats}
+        />
+
         <div className="grid gap-6 lg:grid-cols-2">
           <SectionCard title="Meus produtores" onRefresh={loadProducers}>
             <div className="mb-6">
@@ -948,7 +1007,10 @@ function VetDashboard({ userData, authUser, onLogout }) {
             ) : (
               <div className="space-y-4">
                 {filteredProducers.map((producer) => (
-                  <div key={producer.id} className="rounded-xl border border-zinc-200 p-4">
+                  <div
+                    key={producer.id}
+                    className="rounded-xl border border-zinc-200 p-4"
+                  >
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="text-lg font-semibold text-zinc-800">
@@ -993,7 +1055,10 @@ function VetDashboard({ userData, authUser, onLogout }) {
             ) : (
               <div className="space-y-4">
                 {filteredProperties.map((property) => (
-                  <div key={property.id} className="rounded-xl border border-zinc-200 p-4">
+                  <div
+                    key={property.id}
+                    className="rounded-xl border border-zinc-200 p-4"
+                  >
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="text-lg font-semibold text-zinc-800">
@@ -1070,8 +1135,13 @@ function VetDashboard({ userData, authUser, onLogout }) {
           ) : (
             <div className="space-y-4">
               {filteredTasks.map((task) => (
-                <div key={task.id} className="rounded-xl border border-zinc-200 p-4">
-                  <p className="text-lg font-semibold text-zinc-800">{task.title}</p>
+                <div
+                  key={task.id}
+                  className="rounded-xl border border-zinc-200 p-4"
+                >
+                  <p className="text-lg font-semibold text-zinc-800">
+                    {task.title}
+                  </p>
                   <p className="mt-1 text-sm text-zinc-600">
                     Propriedade: {task.propertyName}
                   </p>
@@ -1092,7 +1162,9 @@ function VetDashboard({ userData, authUser, onLogout }) {
                     </span>
                   </div>
 
-                  <p className="mt-3 text-sm text-zinc-700">{task.description}</p>
+                  <p className="mt-3 text-sm text-zinc-700">
+                    {task.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -1151,7 +1223,10 @@ function VetDashboard({ userData, authUser, onLogout }) {
           ) : (
             <div className="space-y-4">
               {filteredOccurrences.map((occurrence) => (
-                <div key={occurrence.id} className="rounded-xl border border-zinc-200 p-4">
+                <div
+                  key={occurrence.id}
+                  className="rounded-xl border border-zinc-200 p-4"
+                >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <p className="text-lg font-semibold text-zinc-800">
