@@ -292,6 +292,6 @@ A proposta é construir uma ferramenta de linguagem simples, rápida de usar e a
 
 ## Autor
 
-Projeto desenvolvido por Rafael Oliveira.
+Projeto desenvolvido por Rafael Rodrigues.
 
 MVP construído com apoio de ferramentas de inteligência artificial, GitHub, Supabase e Vercel.
