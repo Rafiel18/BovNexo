@@ -1,5 +1,5 @@
-import ProducerReproductionModule from "../components/ProducerReproductionModule";
 import { useEffect, useMemo, useState } from "react";
+import ProducerReproductionModule from "../components/ProducerReproductionModule";
 import { completeTask, getTasksByProducer } from "../services/task";
 import { getProducerByEmail, linkProducerToUser } from "../services/producer";
 import { getPropertiesByProducer } from "../services/property";
@@ -83,6 +83,13 @@ function ProducerDashboard({ userData, onLogout }) {
   const [tasks, setTasks] = useState([]);
   const [properties, setProperties] = useState([]);
   const [occurrences, setOccurrences] = useState([]);
+
+  const [reproductionStats, setReproductionStats] = useState({
+    animals: 0,
+    activeAnimals: 0,
+    females: 0,
+    males: 0,
+  });
 
   const [occurrenceForm, setOccurrenceForm] = useState(initialOccurrenceForm);
 
@@ -258,8 +265,10 @@ function ProducerDashboard({ userData, onLogout }) {
     if (a.status === b.status) {
       return (a.date || "").localeCompare(b.date || "");
     }
+
     if (a.status === "pendente") return -1;
     if (b.status === "pendente") return 1;
+
     return 0;
   });
 
@@ -328,10 +337,21 @@ function ProducerDashboard({ userData, onLogout }) {
     occurrenceStatusFilter,
   ]);
 
-  const pendingTasksCount = tasks.filter((task) => task.status === "pendente").length;
-  const completedTasksCount = tasks.filter((task) => task.status === "concluida").length;
-  const openOccurrencesCount = occurrences.filter((item) => item.status === "aberta").length;
-  const resolvedOccurrencesCount = occurrences.filter((item) => item.status === "resolvida").length;
+  const pendingTasksCount = tasks.filter(
+    (task) => task.status === "pendente"
+  ).length;
+
+  const completedTasksCount = tasks.filter(
+    (task) => task.status === "concluida"
+  ).length;
+
+  const openOccurrencesCount = occurrences.filter(
+    (item) => item.status === "aberta"
+  ).length;
+
+  const resolvedOccurrencesCount = occurrences.filter(
+    (item) => item.status === "resolvida"
+  ).length;
 
   return (
     <div className="min-h-screen bg-zinc-100 px-4 py-8">
@@ -360,11 +380,25 @@ function ProducerDashboard({ userData, onLogout }) {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <SummaryCard label="Tarefas pendentes" value={pendingTasksCount} />
           <SummaryCard label="Tarefas concluídas" value={completedTasksCount} />
           <SummaryCard label="Ocorrências abertas" value={openOccurrencesCount} />
-          <SummaryCard label="Ocorrências resolvidas" value={resolvedOccurrencesCount} />
+          <SummaryCard
+            label="Ocorrências resolvidas"
+            value={resolvedOccurrencesCount}
+          />
+
+          <SummaryCard
+            label="Animais cadastrados"
+            value={reproductionStats.animals}
+          />
+          <SummaryCard
+            label="Animais ativos"
+            value={reproductionStats.activeAnimals}
+          />
+          <SummaryCard label="Fêmeas" value={reproductionStats.females} />
+          <SummaryCard label="Machos" value={reproductionStats.males} />
         </div>
 
         <SectionCard title="Registrar ocorrência">
@@ -438,7 +472,9 @@ function ProducerDashboard({ userData, onLogout }) {
 
             <button
               type="submit"
-              disabled={savingOccurrence || !producerRecord || properties.length === 0}
+              disabled={
+                savingOccurrence || !producerRecord || properties.length === 0
+              }
               className="w-full rounded-lg bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 transition disabled:opacity-60"
             >
               {savingOccurrence ? "Salvando..." : "Registrar ocorrência"}
@@ -464,7 +500,10 @@ function ProducerDashboard({ userData, onLogout }) {
           />
         </SectionCard>
 
-        <SectionCard title="Minhas tarefas sanitárias" onRefresh={loadProducerAndData}>
+        <SectionCard
+          title="Minhas tarefas sanitárias"
+          onRefresh={loadProducerAndData}
+        >
           <div className="mb-6 grid gap-3 md:grid-cols-4">
             <input
               type="text"
@@ -513,11 +552,18 @@ function ProducerDashboard({ userData, onLogout }) {
           ) : (
             <div className="space-y-4">
               {filteredTasks.map((task) => (
-                <div key={task.id} className="rounded-xl border border-zinc-200 p-4">
-                  <p className="text-lg font-semibold text-zinc-800">{task.title}</p>
+                <div
+                  key={task.id}
+                  className="rounded-xl border border-zinc-200 p-4"
+                >
+                  <p className="text-lg font-semibold text-zinc-800">
+                    {task.title}
+                  </p>
+
                   <p className="mt-1 text-sm text-zinc-600">
                     Propriedade: {task.propertyName}
                   </p>
+
                   <p className="mt-1 text-sm text-zinc-600">
                     Data: {formatDateBR(task.date)}
                   </p>
@@ -532,7 +578,9 @@ function ProducerDashboard({ userData, onLogout }) {
                     </span>
                   </div>
 
-                  <p className="mt-3 text-sm text-zinc-700">{task.description}</p>
+                  <p className="mt-3 text-sm text-zinc-700">
+                    {task.description}
+                  </p>
 
                   {task.status !== "concluida" && (
                     <button
@@ -540,7 +588,9 @@ function ProducerDashboard({ userData, onLogout }) {
                       disabled={updatingTaskId === task.id}
                       className="mt-4 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition disabled:opacity-60"
                     >
-                      {updatingTaskId === task.id ? "Concluindo..." : "Marcar como concluída"}
+                      {updatingTaskId === task.id
+                        ? "Concluindo..."
+                        : "Marcar como concluída"}
                     </button>
                   )}
 
@@ -560,6 +610,7 @@ function ProducerDashboard({ userData, onLogout }) {
         <ProducerReproductionModule
           producerId={producerRecord?.id}
           properties={properties}
+          onStatsChange={setReproductionStats}
         />
 
         <SectionCard title="Minhas ocorrências" onRefresh={loadProducerAndData}>
@@ -612,11 +663,18 @@ function ProducerDashboard({ userData, onLogout }) {
           ) : (
             <div className="space-y-4">
               {filteredOccurrences.map((occurrence) => (
-                <div key={occurrence.id} className="rounded-xl border border-zinc-200 p-4">
-                  <p className="text-lg font-semibold text-zinc-800">{occurrence.title}</p>
+                <div
+                  key={occurrence.id}
+                  className="rounded-xl border border-zinc-200 p-4"
+                >
+                  <p className="text-lg font-semibold text-zinc-800">
+                    {occurrence.title}
+                  </p>
+
                   <p className="mt-1 text-sm text-zinc-600">
                     Propriedade: {occurrence.propertyName}
                   </p>
+
                   <p className="mt-1 text-sm text-zinc-600">
                     Data: {formatDateBR(occurrence.date)}
                   </p>
@@ -631,7 +689,9 @@ function ProducerDashboard({ userData, onLogout }) {
                     </span>
                   </div>
 
-                  <p className="mt-3 text-sm text-zinc-700">{occurrence.description}</p>
+                  <p className="mt-3 text-sm text-zinc-700">
+                    {occurrence.description}
+                  </p>
 
                   {occurrence.vetResponse && (
                     <div className="mt-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3">

@@ -68,7 +68,7 @@ function MessageText({ message, type = "default" }) {
   );
 }
 
-function ProducerReproductionModule({ producerId, properties }) {
+function ProducerReproductionModule({ producerId, properties, onStatsChange }) {
   const [animals, setAnimals] = useState([]);
   const [records, setRecords] = useState([]);
 
@@ -85,6 +85,18 @@ function ProducerReproductionModule({ producerId, properties }) {
   const [recordSearch, setRecordSearch] = useState("");
   const [recordPropertyFilter, setRecordPropertyFilter] = useState("");
   const [recordEventFilter, setRecordEventFilter] = useState("");
+
+  useEffect(() => {
+    if (!onStatsChange) return;
+
+    onStatsChange({
+      animals: animals.length,
+      activeAnimals: animals.filter((animal) => animal.status === "ativo")
+        .length,
+      females: animals.filter((animal) => animal.sex === "femea").length,
+      males: animals.filter((animal) => animal.sex === "macho").length,
+    });
+  }, [animals, onStatsChange]);
 
   async function loadAnimals() {
     if (!producerId) return;
@@ -128,6 +140,8 @@ function ProducerReproductionModule({ producerId, properties }) {
 
   useEffect(() => {
     if (!producerId) {
+      setAnimals([]);
+      setRecords([]);
       setLoadingAnimals(false);
       setLoadingRecords(false);
       return;
