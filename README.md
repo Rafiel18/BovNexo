@@ -1,3 +1,4 @@
+````md
 # BovNexo
 
 **BovNexo** é uma aplicação web para gestão sanitária, operacional e reprodutiva de propriedades rurais, conectando veterinários e produtores em um fluxo simples, prático e orientado à tomada de decisão.
@@ -158,3 +159,139 @@ src/
 
   utils/
     formatters.js
+````
+
+---
+
+## Variáveis de ambiente
+
+O projeto usa variáveis de ambiente para conectar ao Supabase.
+
+Crie um arquivo `.env` na raiz do projeto com:
+
+```env
+VITE_SUPABASE_URL=sua_url_do_supabase
+VITE_SUPABASE_PUBLISHABLE_KEY=sua_chave_publishable_do_supabase
+```
+
+Existe um arquivo `.env.example` no repositório como modelo.
+
+> Nunca envie o arquivo `.env` real para o GitHub.
+
+---
+
+## Como rodar localmente
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/Rafiel18/BovNexo.git
+```
+
+### 2. Acesse a pasta
+
+```bash
+cd BovNexo
+```
+
+### 3. Instale as dependências
+
+```bash
+npm install
+```
+
+### 4. Configure o `.env`
+
+Crie o arquivo `.env` com as variáveis do Supabase.
+
+### 5. Rode o projeto
+
+```bash
+npm run dev
+```
+
+O projeto será aberto em:
+
+```txt
+http://localhost:5173
+```
+
+---
+
+## Segurança
+
+O BovNexo utiliza Row Level Security no Supabase para separar os dados entre usuários.
+
+As tabelas principais possuem RLS ativado:
+
+* profiles
+* producers
+* properties
+* tasks
+* occurrences
+* animals
+* reproduction_records
+
+A aplicação foi testada para impedir que:
+
+* um veterinário visualize dados de outro veterinário;
+* um produtor visualize dados de outro produtor;
+* usuários não autenticados acessem os painéis internos.
+
+A chave usada no frontend é a publishable key do Supabase. Chaves sensíveis como `service_role`, senha do banco e connection string não devem ser usadas no frontend.
+
+---
+
+## Status do projeto
+
+O BovNexo está em fase de MVP funcional.
+
+### Já implementado
+
+* Autenticação com Supabase
+* Perfis separados de veterinário e produtor
+* Vínculo entre produtor cadastrado e usuário produtor
+* Gestão de produtores
+* Gestão de propriedades
+* Tarefas sanitárias
+* Ocorrências com resposta veterinária
+* Módulo de reprodução
+* Deploy online na Vercel
+
+### Próximos passos
+
+* Melhorar responsividade mobile
+* Criar landing page antes do login
+* Melhorar experiência visual dos dashboards
+* Adicionar busca e filtros mais avançados
+* Criar dados fictícios para demonstração
+* Adicionar edição de animais
+* Adicionar edição de registros reprodutivos
+* Criar alertas de previsão de parto
+* Criar calendário sanitário e reprodutivo
+* Avaliar modo offline para uso em campo
+
+---
+
+## Visão futura
+
+A visão do BovNexo é se tornar uma plataforma simples e robusta para apoiar veterinários, produtores e consultores na gestão de propriedades rurais.
+
+O foco é unir:
+
+* manejo sanitário;
+* rotina operacional;
+* reprodução;
+* acompanhamento veterinário;
+* histórico de campo;
+* tomada de decisão prática.
+
+A proposta é construir uma ferramenta de linguagem simples, rápida de usar e adequada à realidade do campo.
+
+---
+
+## Autor
+
+Projeto desenvolvido por Rafael Oliveira.
+
+MVP construído com apoio de ferramentas de inteligência artificial, GitHub, Supabase e Vercel.
