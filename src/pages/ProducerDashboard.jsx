@@ -1,3 +1,4 @@
+import ProducerReproductionModule from "../components/ProducerReproductionModule";
 import { useEffect, useMemo, useState } from "react";
 import { completeTask, getTasksByProducer } from "../services/task";
 import { getProducerByEmail, linkProducerToUser } from "../services/producer";
@@ -555,6 +556,11 @@ function ProducerDashboard({ userData, onLogout }) {
 
           <MessageText message={taskMessage} />
         </SectionCard>
+
+        <ProducerReproductionModule
+          producerId={producerRecord?.id}
+          properties={properties}
+        />
 
         <SectionCard title="Minhas ocorrências" onRefresh={loadProducerAndData}>
           <div className="mb-6 grid gap-3 md:grid-cols-4">
