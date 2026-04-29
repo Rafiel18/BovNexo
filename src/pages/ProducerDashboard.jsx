@@ -26,7 +26,7 @@ function InfoCard({ label, value }) {
   return (
     <div className="rounded-xl border border-zinc-200 p-4">
       <p className="text-sm text-zinc-500">{label}</p>
-      <p className="text-lg font-medium text-zinc-800">{value}</p>
+      <p className="text-lg font-medium text-zinc-800 break-words">{value}</p>
     </div>
   );
 }
@@ -42,21 +42,23 @@ function SummaryCard({ label, value }) {
 
 function SectionCard({ title, onRefresh, children }) {
   return (
-    <div className="rounded-2xl bg-white shadow-lg p-8">
-      <div className="flex items-center justify-between gap-4">
-        <h2 className="text-2xl font-bold text-zinc-800">{title}</h2>
+    <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
+      <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+        <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
+          {title}
+        </h2>
 
         {onRefresh && (
           <button
             onClick={onRefresh}
-            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition"
+            className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 sm:w-auto"
           >
             Atualizar
           </button>
         )}
       </div>
 
-      <div className="mt-6">{children}</div>
+      <div className="mt-5 sm:mt-6">{children}</div>
     </div>
   );
 }
@@ -354,10 +356,10 @@ function ProducerDashboard({ userData, onLogout }) {
   ).length;
 
   return (
-    <div className="min-h-screen bg-zinc-100 px-4 py-8">
-      <div className="mx-auto w-full max-w-4xl space-y-6">
-        <div className="rounded-2xl bg-white shadow-lg p-8">
-          <h1 className="text-3xl font-bold text-zinc-800">
+    <div className="min-h-screen bg-zinc-100 px-3 py-4 sm:px-4 sm:py-8">
+      <div className="mx-auto w-full max-w-5xl space-y-5 sm:space-y-6">
+        <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
+          <h1 className="text-2xl font-bold text-zinc-800 sm:text-3xl">
             Painel do Produtor
           </h1>
 
@@ -380,7 +382,7 @@ function ProducerDashboard({ userData, onLogout }) {
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <SummaryCard label="Tarefas pendentes" value={pendingTasksCount} />
           <SummaryCard label="Tarefas concluídas" value={completedTasksCount} />
           <SummaryCard label="Ocorrências abertas" value={openOccurrencesCount} />
@@ -388,7 +390,6 @@ function ProducerDashboard({ userData, onLogout }) {
             label="Ocorrências resolvidas"
             value={resolvedOccurrencesCount}
           />
-
           <SummaryCard
             label="Animais cadastrados"
             value={reproductionStats.animals}
@@ -504,7 +505,7 @@ function ProducerDashboard({ userData, onLogout }) {
           title="Minhas tarefas sanitárias"
           onRefresh={loadProducerAndData}
         >
-          <div className="mb-6 grid gap-3 md:grid-cols-4">
+          <div className="mb-5 grid gap-3 sm:mb-6 md:grid-cols-2 lg:grid-cols-4">
             <input
               type="text"
               value={taskSearch}
@@ -586,7 +587,7 @@ function ProducerDashboard({ userData, onLogout }) {
                     <button
                       onClick={() => handleCompleteTask(task.id)}
                       disabled={updatingTaskId === task.id}
-                      className="mt-4 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition disabled:opacity-60"
+                      className="mt-4 w-full rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition disabled:opacity-60 sm:w-auto"
                     >
                       {updatingTaskId === task.id
                         ? "Concluindo..."
@@ -614,7 +615,7 @@ function ProducerDashboard({ userData, onLogout }) {
         />
 
         <SectionCard title="Minhas ocorrências" onRefresh={loadProducerAndData}>
-          <div className="mb-6 grid gap-3 md:grid-cols-4">
+          <div className="mb-5 grid gap-3 sm:mb-6 md:grid-cols-2 lg:grid-cols-4">
             <input
               type="text"
               value={occurrenceSearch}

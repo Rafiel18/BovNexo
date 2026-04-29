@@ -74,21 +74,23 @@ function SummaryCard({ label, value }) {
 
 function SectionCard({ title, onRefresh, children, className = "" }) {
   return (
-    <div className={`rounded-2xl bg-white shadow-lg p-8 ${className}`}>
-      <div className="flex items-center justify-between gap-4">
-        <h2 className="text-2xl font-bold text-zinc-800">{title}</h2>
+    <div className={`rounded-2xl bg-white shadow-lg p-5 sm:p-8 ${className}`}>
+      <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+        <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
+          {title}
+        </h2>
 
         {onRefresh && (
           <button
             onClick={onRefresh}
-            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition"
+            className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 sm:w-auto"
           >
             Atualizar
           </button>
         )}
       </div>
 
-      <div className="mt-6">{children}</div>
+      <div className="mt-5 sm:mt-6">{children}</div>
     </div>
   );
 }
@@ -650,10 +652,10 @@ function VetDashboard({ userData, authUser, onLogout }) {
   ).length;
 
   return (
-    <div className="min-h-screen bg-zinc-100 px-4 py-8">
-      <div className="mx-auto w-full max-w-5xl space-y-6">
-        <div className="rounded-2xl bg-white shadow-lg p-8">
-          <h1 className="text-3xl font-bold text-zinc-800">
+    <div className="min-h-screen bg-zinc-100 px-3 py-4 sm:px-4 sm:py-8">
+      <div className="mx-auto w-full max-w-6xl space-y-5 sm:space-y-6">
+        <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
+          <h1 className="text-2xl font-bold text-zinc-800 sm:text-3xl">
             Painel do Veterinário
           </h1>
 
@@ -673,7 +675,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <SummaryCard label="Produtores" value={totalProducers} />
           <SummaryCard label="Propriedades" value={totalProperties} />
           <SummaryCard label="Tarefas pendentes" value={pendingTasksCount} />
@@ -693,9 +695,9 @@ function VetDashboard({ userData, authUser, onLogout }) {
           <SummaryCard label="Machos" value={reproductionStats.males} />
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="rounded-2xl bg-white shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-zinc-800">
+        <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
+          <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
+            <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
               {editingProducerId ? "Editar produtor" : "Cadastrar produtor"}
             </h2>
 
@@ -745,7 +747,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
                 />
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row">
                 <button
                   type="submit"
                   disabled={savingProducer}
@@ -782,8 +784,8 @@ function VetDashboard({ userData, authUser, onLogout }) {
             />
           </div>
 
-          <div className="rounded-2xl bg-white shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-zinc-800">
+          <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
+            <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
               {editingPropertyId
                 ? "Editar propriedade"
                 : "Cadastrar propriedade"}
@@ -840,7 +842,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
                 </select>
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row">
                 <button
                   type="submit"
                   disabled={savingProperty || producers.length === 0}
@@ -885,8 +887,8 @@ function VetDashboard({ userData, authUser, onLogout }) {
           </div>
         </div>
 
-        <div className="rounded-2xl bg-white shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-zinc-800">
+        <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
+          <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
             Cadastrar tarefa sanitária
           </h2>
 
@@ -988,9 +990,9 @@ function VetDashboard({ userData, authUser, onLogout }) {
           onStatsChange={setReproductionStats}
         />
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
           <SectionCard title="Meus produtores" onRefresh={loadProducers}>
-            <div className="mb-6">
+            <div className="mb-5 sm:mb-6">
               <input
                 type="text"
                 value={producerSearch}
@@ -1011,7 +1013,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
                     key={producer.id}
                     className="rounded-xl border border-zinc-200 p-4"
                   >
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="grid gap-4 lg:grid-cols-[1fr_180px]">
                       <div>
                         <p className="text-lg font-semibold text-zinc-800">
                           {producer.name}
@@ -1026,7 +1028,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
 
                       <button
                         onClick={() => handleEditProducer(producer)}
-                        className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition"
+                        className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition sm:w-auto"
                       >
                         Editar
                       </button>
@@ -1038,7 +1040,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
           </SectionCard>
 
           <SectionCard title="Minhas propriedades" onRefresh={loadProperties}>
-            <div className="mb-6">
+            <div className="mb-5 sm:mb-6">
               <input
                 type="text"
                 value={propertySearch}
@@ -1059,7 +1061,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
                     key={property.id}
                     className="rounded-xl border border-zinc-200 p-4"
                   >
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
                       <div>
                         <p className="text-lg font-semibold text-zinc-800">
                           {property.name}
@@ -1074,7 +1076,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
 
                       <button
                         onClick={() => handleEditProperty(property)}
-                        className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition"
+                        className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition sm:w-auto"
                       >
                         Editar
                       </button>
@@ -1087,7 +1089,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
         </div>
 
         <SectionCard title="Tarefas sanitárias" onRefresh={loadTasks}>
-          <div className="mb-6 grid gap-3 md:grid-cols-4">
+          <div className="mb-5 grid gap-3 sm:mb-6 md:grid-cols-2 lg:grid-cols-4">
             <input
               type="text"
               value={taskSearch}
@@ -1174,7 +1176,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
         </SectionCard>
 
         <SectionCard title="Ocorrências recebidas" onRefresh={loadOccurrences}>
-          <div className="mb-6 grid gap-3 md:grid-cols-4">
+          <div className="mb-5 grid gap-3 sm:mb-6 md:grid-cols-2 lg:grid-cols-4">
             <input
               type="text"
               value={occurrenceSearch}
@@ -1227,8 +1229,8 @@ function VetDashboard({ userData, authUser, onLogout }) {
                   key={occurrence.id}
                   className="rounded-xl border border-zinc-200 p-4"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
+                  <div className="flex flex-col items-start justify-between gap-4 lg:flex-row">
+                    <div className="w-full flex-1">
                       <p className="text-lg font-semibold text-zinc-800">
                         {occurrence.title}
                       </p>
@@ -1270,7 +1272,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
                             )
                           }
                           placeholder="Ex.: Isolar o animal, aferir temperatura 2x ao dia e iniciar protocolo conforme avaliação clínica."
-                          className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 min-h-[110px]"
+                          className="w-full min-h-[160px] resize-y rounded-lg border border-zinc-300 px-3 py-3 text-base leading-relaxed outline-none focus:border-zinc-800 sm:min-h-[130px] lg:min-h-[150px]"
                         />
 
                         <button
@@ -1278,7 +1280,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
                             handleSaveOccurrenceResponse(occurrence.id)
                           }
                           disabled={savingResponseId === occurrence.id}
-                          className="mt-3 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition disabled:opacity-60"
+                          className="mt-3 w-full rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition disabled:opacity-60 sm:w-auto"
                         >
                           {savingResponseId === occurrence.id
                             ? "Salvando resposta..."
@@ -1287,7 +1289,7 @@ function VetDashboard({ userData, authUser, onLogout }) {
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-2 min-w-[160px]">
+                    <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3 lg:flex lg:w-[180px] lg:flex-col">
                       {occurrenceStatusOptions.map((option) => (
                         <button
                           key={option.value}
