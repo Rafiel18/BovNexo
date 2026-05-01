@@ -71,21 +71,23 @@ function MessageText({ message, type = "default" }) {
 
 function SectionCard({ title, onRefresh, children }) {
   return (
-    <div className="rounded-2xl bg-white shadow-lg p-8">
-      <div className="flex items-center justify-between gap-4">
-        <h2 className="text-2xl font-bold text-zinc-800">{title}</h2>
+    <div className="rounded-2xl bg-white p-5 shadow-lg sm:p-8">
+      <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+        <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
+          {title}
+        </h2>
 
         {onRefresh && (
           <button
             onClick={onRefresh}
-            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition"
+            className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 sm:w-auto"
           >
             Atualizar
           </button>
         )}
       </div>
 
-      <div className="mt-6">{children}</div>
+      <div className="mt-5 sm:mt-6">{children}</div>
     </div>
   );
 }
@@ -404,18 +406,18 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
         <SectionCard title="Cadastrar animal / matriz">
           <form onSubmit={handleAnimalSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-zinc-700">
                 Propriedade
               </label>
               <select
                 name="propertyId"
                 value={animalForm.propertyId}
                 onChange={handleAnimalChange}
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
                 required
               >
                 <option value="">Selecione uma propriedade</option>
@@ -428,7 +430,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-zinc-700">
                 Identificação
               </label>
               <input
@@ -444,7 +446,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-zinc-700">
                   Nome/apelido
                 </label>
                 <input
@@ -458,7 +460,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-zinc-700">
                   Raça
                 </label>
                 <input
@@ -474,14 +476,14 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
 
             <div className="grid gap-4 md:grid-cols-3">
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-zinc-700">
                   Sexo
                 </label>
                 <select
                   name="sex"
                   value={animalForm.sex}
                   onChange={handleAnimalChange}
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+                  className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
                 >
                   <option value="femea">Fêmea</option>
                   <option value="macho">Macho</option>
@@ -489,14 +491,14 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-zinc-700">
                   Categoria
                 </label>
                 <select
                   name="category"
                   value={animalForm.category}
                   onChange={handleAnimalChange}
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+                  className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
                 >
                   <option value="matriz">Matriz</option>
                   <option value="novilha">Novilha</option>
@@ -509,14 +511,14 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-zinc-700">
                   Status
                 </label>
                 <select
                   name="status"
                   value={animalForm.status}
                   onChange={handleAnimalChange}
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+                  className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
                 >
                   <option value="ativo">Ativo</option>
                   <option value="vendido">Vendido</option>
@@ -527,7 +529,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-zinc-700">
                 Data de nascimento
               </label>
               <input
@@ -542,7 +544,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
             <button
               type="submit"
               disabled={savingAnimal || properties.length === 0}
-              className="w-full rounded-lg bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 transition disabled:opacity-60"
+              className="w-full rounded-lg bg-zinc-900 py-3 font-medium text-white transition hover:bg-zinc-800 disabled:opacity-60"
             >
               {savingAnimal ? "Salvando..." : "Salvar animal"}
             </button>
@@ -570,14 +572,14 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
         <SectionCard title="Registrar evento reprodutivo">
           <form onSubmit={handleRecordSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-zinc-700">
                 Animal
               </label>
               <select
                 name="animalId"
                 value={recordForm.animalId}
                 onChange={handleRecordChange}
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
                 required
               >
                 <option value="">Selecione um animal</option>
@@ -593,14 +595,14 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-zinc-700">
                   Tipo de evento
                 </label>
                 <select
                   name="eventType"
                   value={recordForm.eventType}
                   onChange={handleRecordChange}
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+                  className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
                 >
                   <option value="cio">Cio</option>
                   <option value="cobertura">Cobertura</option>
@@ -615,7 +617,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-zinc-700">
                   Data do evento
                 </label>
                 <input
@@ -631,14 +633,14 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
 
             {shouldShowMethod && (
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-zinc-700">
                   Método
                 </label>
                 <select
                   name="method"
                   value={recordForm.method}
                   onChange={handleRecordChange}
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+                  className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
                 >
                   <option value="monta_natural">Monta natural</option>
                   <option value="inseminacao_artificial">
@@ -652,7 +654,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
 
             {shouldShowMethod && (
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-zinc-700">
                   Touro / sêmen
                 </label>
                 <input
@@ -668,14 +670,14 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
 
             {shouldShowDiagnosis && (
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-zinc-700">
                   Resultado do diagnóstico
                 </label>
                 <select
                   name="diagnosisResult"
                   value={recordForm.diagnosisResult}
                   onChange={handleRecordChange}
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+                  className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
                 >
                   <option value="prenhe">Prenhe</option>
                   <option value="vazia">Vazia</option>
@@ -687,7 +689,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
 
             {shouldShowExpectedCalving && (
               <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                <label className="mb-1 block text-sm font-medium text-zinc-700">
                   Previsão de parto
                 </label>
                 <input
@@ -701,7 +703,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-zinc-700">
                 Observações
               </label>
               <textarea
@@ -709,14 +711,14 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
                 value={recordForm.notes}
                 onChange={handleRecordChange}
                 placeholder="Detalhes clínicos, manejo, observações do campo..."
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 min-h-[100px]"
+                className="min-h-[140px] w-full resize-y rounded-lg border border-zinc-300 px-3 py-3 text-base leading-relaxed outline-none focus:border-zinc-800 sm:min-h-[110px] sm:py-2"
               />
             </div>
 
             <button
               type="submit"
               disabled={savingRecord || animals.length === 0}
-              className="w-full rounded-lg bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 transition disabled:opacity-60"
+              className="w-full rounded-lg bg-zinc-900 py-3 font-medium text-white transition hover:bg-zinc-800 disabled:opacity-60"
             >
               {savingRecord ? "Salvando..." : "Salvar evento"}
             </button>
@@ -743,7 +745,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
       </div>
 
       <SectionCard title="Animais cadastrados" onRefresh={loadAnimals}>
-        <div className="mb-6 grid gap-3 md:grid-cols-4">
+        <div className="mb-5 grid gap-3 sm:mb-6 md:grid-cols-2 lg:grid-cols-4">
           <input
             type="text"
             value={animalSearch}
@@ -755,7 +757,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
           <select
             value={animalPropertyFilter}
             onChange={(e) => setAnimalPropertyFilter(e.target.value)}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
           >
             <option value="">Todas as propriedades</option>
             {properties.map((property) => (
@@ -768,7 +770,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
           <select
             value={animalStatusFilter}
             onChange={(e) => setAnimalStatusFilter(e.target.value)}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
           >
             <option value="">Todos os status</option>
             <option value="ativo">Ativo</option>
@@ -780,7 +782,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
           <button
             type="button"
             onClick={clearAnimalFilters}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100 transition"
+            className="w-full rounded-lg border border-zinc-300 px-3 py-2 font-medium text-zinc-700 transition hover:bg-zinc-100"
           >
             Limpar filtros
           </button>
@@ -797,7 +799,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
                 key={animal.id}
                 className="rounded-xl border border-zinc-200 p-4"
               >
-                <p className="text-lg font-semibold text-zinc-800">
+                <p className="break-words text-lg font-semibold text-zinc-800">
                   {animal.identification}
                   {animal.name ? ` - ${animal.name}` : ""}
                 </p>
@@ -810,13 +812,13 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
                   Produtor: {animal.producerName}
                 </p>
 
-                <p className="mt-1 text-sm text-zinc-600">
+                <p className="mt-1 break-words text-sm text-zinc-600">
                   Categoria: {animal.category} | Sexo: {animal.sex} | Status:{" "}
                   {animal.status}
                 </p>
 
                 {animal.breed && (
-                  <p className="mt-1 text-sm text-zinc-600">
+                  <p className="mt-1 break-words text-sm text-zinc-600">
                     Raça: {animal.breed}
                   </p>
                 )}
@@ -833,7 +835,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
       </SectionCard>
 
       <SectionCard title="Histórico reprodutivo" onRefresh={loadRecords}>
-        <div className="mb-6 grid gap-3 md:grid-cols-4">
+        <div className="mb-5 grid gap-3 sm:mb-6 md:grid-cols-2 lg:grid-cols-4">
           <input
             type="text"
             value={recordSearch}
@@ -845,7 +847,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
           <select
             value={recordPropertyFilter}
             onChange={(e) => setRecordPropertyFilter(e.target.value)}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
           >
             <option value="">Todas as propriedades</option>
             {properties.map((property) => (
@@ -858,7 +860,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
           <select
             value={recordEventFilter}
             onChange={(e) => setRecordEventFilter(e.target.value)}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
           >
             <option value="">Todos os eventos</option>
             <option value="cio">Cio</option>
@@ -873,7 +875,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
           <button
             type="button"
             onClick={clearRecordFilters}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100 transition"
+            className="w-full rounded-lg border border-zinc-300 px-3 py-2 font-medium text-zinc-700 transition hover:bg-zinc-100"
           >
             Limpar filtros
           </button>
@@ -890,11 +892,11 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
                 key={record.id}
                 className="rounded-xl border border-zinc-200 p-4"
               >
-                <p className="text-lg font-semibold text-zinc-800">
+                <p className="break-words text-lg font-semibold text-zinc-800">
                   {eventTypeLabels[record.eventType] || record.eventType}
                 </p>
 
-                <p className="mt-1 text-sm text-zinc-600">
+                <p className="mt-1 break-words text-sm text-zinc-600">
                   Animal: {record.animalIdentification}
                   {record.animalName ? ` - ${record.animalName}` : ""}
                 </p>
@@ -914,7 +916,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
                 )}
 
                 {record.bullOrSemen && (
-                  <p className="mt-1 text-sm text-zinc-600">
+                  <p className="mt-1 break-words text-sm text-zinc-600">
                     Touro/sêmen: {record.bullOrSemen}
                   </p>
                 )}
@@ -935,7 +937,9 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
 
                 {record.notes && (
                   <div className="mt-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-                    <p className="text-sm text-zinc-700">{record.notes}</p>
+                    <p className="break-words text-sm leading-relaxed text-zinc-700">
+                      {record.notes}
+                    </p>
                   </div>
                 )}
               </div>
