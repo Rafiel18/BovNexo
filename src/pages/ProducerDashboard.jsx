@@ -26,7 +26,7 @@ function InfoCard({ label, value }) {
   return (
     <div className="rounded-xl border border-zinc-200 p-4">
       <p className="text-sm text-zinc-500">{label}</p>
-      <p className="text-lg font-medium text-zinc-800 break-words">{value}</p>
+      <p className="break-words text-lg font-medium text-zinc-800">{value}</p>
     </div>
   );
 }
@@ -42,7 +42,7 @@ function SummaryCard({ label, value }) {
 
 function SectionCard({ title, onRefresh, children }) {
   return (
-    <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
+    <div className="rounded-2xl bg-white p-5 shadow-lg sm:p-8">
       <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
           {title}
@@ -358,7 +358,7 @@ function ProducerDashboard({ userData, onLogout }) {
   return (
     <div className="min-h-screen bg-zinc-100 px-3 py-4 sm:px-4 sm:py-8">
       <div className="mx-auto w-full max-w-5xl space-y-5 sm:space-y-6">
-        <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
+        <div className="rounded-2xl bg-white p-5 shadow-lg sm:p-8">
           <h1 className="text-2xl font-bold text-zinc-800 sm:text-3xl">
             Painel do Produtor
           </h1>
@@ -374,7 +374,7 @@ function ProducerDashboard({ userData, onLogout }) {
 
           <div className="mt-4 rounded-xl border border-zinc-200 p-4">
             <p className="text-sm text-zinc-500">Produtor vinculado</p>
-            <p className="text-lg font-medium text-zinc-800">
+            <p className="break-words text-lg font-medium text-zinc-800">
               {loadingProducer
                 ? "Carregando..."
                 : producerRecord?.name || "Ainda não vinculado"}
@@ -405,14 +405,14 @@ function ProducerDashboard({ userData, onLogout }) {
         <SectionCard title="Registrar ocorrência">
           <form onSubmit={handleOccurrenceSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-zinc-700">
                 Propriedade
               </label>
               <select
                 name="propertyId"
                 value={occurrenceForm.propertyId}
                 onChange={handleOccurrenceChange}
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
                 required
                 disabled={!producerRecord}
               >
@@ -426,7 +426,7 @@ function ProducerDashboard({ userData, onLogout }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-zinc-700">
                 Título da ocorrência
               </label>
               <input
@@ -442,7 +442,7 @@ function ProducerDashboard({ userData, onLogout }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-zinc-700">
                 Descrição
               </label>
               <textarea
@@ -450,14 +450,14 @@ function ProducerDashboard({ userData, onLogout }) {
                 value={occurrenceForm.description}
                 onChange={handleOccurrenceChange}
                 placeholder="Descreva a ocorrência observada no campo"
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 min-h-[110px]"
+                className="min-h-[140px] w-full resize-y rounded-lg border border-zinc-300 px-3 py-3 text-base leading-relaxed outline-none focus:border-zinc-800 sm:min-h-[110px] sm:py-2"
                 required
                 disabled={!producerRecord}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-zinc-700">
                 Data
               </label>
               <input
@@ -476,7 +476,7 @@ function ProducerDashboard({ userData, onLogout }) {
               disabled={
                 savingOccurrence || !producerRecord || properties.length === 0
               }
-              className="w-full rounded-lg bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 transition disabled:opacity-60"
+              className="w-full rounded-lg bg-zinc-900 py-3 font-medium text-white transition hover:bg-zinc-800 disabled:opacity-60"
             >
               {savingOccurrence ? "Salvando..." : "Registrar ocorrência"}
             </button>
@@ -517,7 +517,7 @@ function ProducerDashboard({ userData, onLogout }) {
             <select
               value={taskPropertyFilter}
               onChange={(e) => setTaskPropertyFilter(e.target.value)}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
             >
               <option value="">Todas as propriedades</option>
               {properties.map((property) => (
@@ -530,7 +530,7 @@ function ProducerDashboard({ userData, onLogout }) {
             <select
               value={taskStatusFilter}
               onChange={(e) => setTaskStatusFilter(e.target.value)}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
             >
               <option value="">Todos os status</option>
               <option value="pendente">Pendente</option>
@@ -540,7 +540,7 @@ function ProducerDashboard({ userData, onLogout }) {
             <button
               type="button"
               onClick={clearTaskFilters}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100 transition"
+              className="w-full rounded-lg border border-zinc-300 px-3 py-2 font-medium text-zinc-700 transition hover:bg-zinc-100"
             >
               Limpar filtros
             </button>
@@ -557,7 +557,7 @@ function ProducerDashboard({ userData, onLogout }) {
                   key={task.id}
                   className="rounded-xl border border-zinc-200 p-4"
                 >
-                  <p className="text-lg font-semibold text-zinc-800">
+                  <p className="break-words text-lg font-semibold text-zinc-800">
                     {task.title}
                   </p>
 
@@ -579,7 +579,7 @@ function ProducerDashboard({ userData, onLogout }) {
                     </span>
                   </div>
 
-                  <p className="mt-3 text-sm text-zinc-700">
+                  <p className="mt-3 break-words text-sm text-zinc-700">
                     {task.description}
                   </p>
 
@@ -587,7 +587,7 @@ function ProducerDashboard({ userData, onLogout }) {
                     <button
                       onClick={() => handleCompleteTask(task.id)}
                       disabled={updatingTaskId === task.id}
-                      className="mt-4 w-full rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition disabled:opacity-60 sm:w-auto"
+                      className="mt-4 w-full rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:opacity-60 sm:w-auto"
                     >
                       {updatingTaskId === task.id
                         ? "Concluindo..."
@@ -627,7 +627,7 @@ function ProducerDashboard({ userData, onLogout }) {
             <select
               value={occurrencePropertyFilter}
               onChange={(e) => setOccurrencePropertyFilter(e.target.value)}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
             >
               <option value="">Todas as propriedades</option>
               {properties.map((property) => (
@@ -640,7 +640,7 @@ function ProducerDashboard({ userData, onLogout }) {
             <select
               value={occurrenceStatusFilter}
               onChange={(e) => setOccurrenceStatusFilter(e.target.value)}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-zinc-800"
             >
               <option value="">Todos os status</option>
               <option value="aberta">Aberta</option>
@@ -651,7 +651,7 @@ function ProducerDashboard({ userData, onLogout }) {
             <button
               type="button"
               onClick={clearOccurrenceFilters}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100 transition"
+              className="w-full rounded-lg border border-zinc-300 px-3 py-2 font-medium text-zinc-700 transition hover:bg-zinc-100"
             >
               Limpar filtros
             </button>
@@ -668,7 +668,7 @@ function ProducerDashboard({ userData, onLogout }) {
                   key={occurrence.id}
                   className="rounded-xl border border-zinc-200 p-4"
                 >
-                  <p className="text-lg font-semibold text-zinc-800">
+                  <p className="break-words text-lg font-semibold text-zinc-800">
                     {occurrence.title}
                   </p>
 
@@ -690,7 +690,7 @@ function ProducerDashboard({ userData, onLogout }) {
                     </span>
                   </div>
 
-                  <p className="mt-3 text-sm text-zinc-700">
+                  <p className="mt-3 break-words text-sm text-zinc-700">
                     {occurrence.description}
                   </p>
 
@@ -699,7 +699,7 @@ function ProducerDashboard({ userData, onLogout }) {
                       <p className="text-sm font-medium text-zinc-700">
                         Resposta do veterinário
                       </p>
-                      <p className="mt-1 text-sm text-zinc-700">
+                      <p className="mt-1 break-words text-sm leading-relaxed text-zinc-700">
                         {occurrence.vetResponse}
                       </p>
                     </div>
@@ -714,7 +714,7 @@ function ProducerDashboard({ userData, onLogout }) {
 
         <button
           onClick={onLogout}
-          className="w-full rounded-lg bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 transition"
+          className="w-full rounded-lg bg-zinc-900 py-3 font-medium text-white transition hover:bg-zinc-800"
         >
           Sair
         </button>
