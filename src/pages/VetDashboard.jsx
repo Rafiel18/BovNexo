@@ -72,6 +72,32 @@ function SummaryCard({ label, value }) {
   );
 }
 
+function PriorityCard({ label, value, tone = "neutral" }) {
+  const hasItems = value > 0;
+
+  const toneClasses = hasItems
+    ? tone === "warning"
+      ? "border-amber-300 bg-amber-50"
+      : "border-red-300 bg-red-50"
+    : "border-zinc-200 bg-white";
+
+  const valueClasses = hasItems
+    ? tone === "warning"
+      ? "text-amber-700"
+      : "text-red-700"
+    : "text-zinc-800";
+
+  return (
+    <div className={`rounded-xl border p-4 shadow-sm ${toneClasses}`}>
+      <p className="text-sm font-medium text-zinc-600">{label}</p>
+      <p className={`mt-1 text-3xl font-bold ${valueClasses}`}>{value}</p>
+      {hasItems && (
+        <p className="mt-1 text-xs text-zinc-500">Precisa da sua atenção</p>
+      )}
+    </div>
+  );
+}
+
 function SectionCard({ title, onRefresh, children, className = "" }) {
   return (
     <div className={`rounded-2xl bg-white shadow-lg p-5 sm:p-8 ${className}`}>
@@ -675,24 +701,42 @@ function VetDashboard({ userData, authUser, onLogout }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <SummaryCard label="Produtores" value={totalProducers} />
-          <SummaryCard label="Propriedades" value={totalProperties} />
-          <SummaryCard label="Tarefas pendentes" value={pendingTasksCount} />
-          <SummaryCard
-            label="Ocorrências abertas"
-            value={openOccurrencesCount}
-          />
-          <SummaryCard
-            label="Animais cadastrados"
-            value={reproductionStats.animals}
-          />
-          <SummaryCard
-            label="Animais ativos"
-            value={reproductionStats.activeAnimals}
-          />
-          <SummaryCard label="Fêmeas" value={reproductionStats.females} />
-          <SummaryCard label="Machos" value={reproductionStats.males} />
+        <div>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">
+            Precisa de atenção
+          </h2>
+          <div className="grid grid-cols-2 gap-3">
+            <PriorityCard
+              label="Tarefas pendentes"
+              value={pendingTasksCount}
+              tone="warning"
+            />
+            <PriorityCard
+              label="Ocorrências abertas"
+              value={openOccurrencesCount}
+              tone="danger"
+            />
+          </div>
+        </div>
+
+        <div>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">
+            Visão geral
+          </h2>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+            <SummaryCard label="Produtores" value={totalProducers} />
+            <SummaryCard label="Propriedades" value={totalProperties} />
+            <SummaryCard
+              label="Animais cadastrados"
+              value={reproductionStats.animals}
+            />
+            <SummaryCard
+              label="Animais ativos"
+              value={reproductionStats.activeAnimals}
+            />
+            <SummaryCard label="Fêmeas" value={reproductionStats.females} />
+            <SummaryCard label="Machos" value={reproductionStats.males} />
+          </div>
         </div>
 
         <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
