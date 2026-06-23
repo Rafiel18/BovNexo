@@ -677,700 +677,464 @@ function VetDashboard({ userData, authUser, onLogout }) {
     (item) => item.status === "aberta"
   ).length;
 
+  const [activeSection, setActiveSection] = useState("visao-geral");
+
+  const navItems = [
+    {
+      id: "visao-geral",
+      label: "Visão Geral",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        </svg>
+      ),
+    },
+    {
+      id: "produtores",
+      label: "Produtores",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      ),
+    },
+    {
+      id: "tarefas",
+      label: "Tarefas",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+      ),
+      badge: pendingTasksCount,
+    },
+    {
+      id: "ocorrencias",
+      label: "Ocorrências",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      ),
+      badge: openOccurrencesCount,
+    },
+    {
+      id: "reproducao",
+      label: "Reprodução",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      ),
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-zinc-100 px-3 py-4 sm:px-4 sm:py-8">
-      <div className="mx-auto w-full max-w-6xl space-y-5 sm:space-y-6">
-        <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
-          <h1 className="text-2xl font-bold text-zinc-800 sm:text-3xl">
-            Painel do Veterinário
-          </h1>
-
-          <p className="mt-3 text-zinc-600">
-            Bem-vindo, <span className="font-semibold">{userData.name}</span>.
-          </p>
-
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {dashboardCards.map((card) => (
-              <InfoCard
-                key={card.label}
-                label={card.label}
-                value={card.value}
-                valueClassName={card.valueClassName}
-              />
-            ))}
-          </div>
+    <div className="flex min-h-screen bg-zinc-100">
+      {/* Sidebar - visível apenas em desktop (lg+) */}
+      <aside className="hidden lg:flex lg:w-60 lg:flex-col lg:fixed lg:inset-y-0 lg:bg-white lg:border-r lg:border-zinc-200 lg:shadow-sm">
+        {/* Logo */}
+        <div className="flex items-center gap-2 px-5 py-5 border-b border-zinc-100">
+          <span className="text-lg font-bold text-zinc-900">BovNexo</span>
+          <span className="text-xs text-zinc-400 font-medium">Vet</span>
         </div>
 
-        <div>
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">
-            Precisa de atenção
-          </h2>
-          <div className="grid grid-cols-2 gap-3">
-            <PriorityCard
-              label="Tarefas pendentes"
-              value={pendingTasksCount}
-              tone="warning"
-            />
-            <PriorityCard
-              label="Ocorrências abertas"
-              value={openOccurrencesCount}
-              tone="danger"
-            />
-          </div>
-        </div>
-
-        <div>
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">
-            Visão geral
-          </h2>
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
-            <SummaryCard label="Produtores" value={totalProducers} />
-            <SummaryCard label="Propriedades" value={totalProperties} />
-            <SummaryCard
-              label="Animais cadastrados"
-              value={reproductionStats.animals}
-            />
-            <SummaryCard
-              label="Animais ativos"
-              value={reproductionStats.activeAnimals}
-            />
-            <SummaryCard label="Fêmeas" value={reproductionStats.females} />
-            <SummaryCard label="Machos" value={reproductionStats.males} />
-          </div>
-        </div>
-
-        <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
-          <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
-            <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
-              {editingProducerId ? "Editar produtor" : "Cadastrar produtor"}
-            </h2>
-
-            <form onSubmit={handleProducerSubmit} className="mt-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
-                  Nome
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={producerForm.name}
-                  onChange={handleProducerChange}
-                  placeholder="Ex.: João Ferreira"
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
-                  E-mail
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={producerForm.email}
-                  onChange={handleProducerChange}
-                  placeholder="Ex.: joao@email.com"
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
-                  Telefone
-                </label>
-                <input
-                  type="text"
-                  name="phone"
-                  value={producerForm.phone}
-                  onChange={handleProducerChange}
-                  placeholder="Ex.: (31) 99999-0000"
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-                  required
-                />
-              </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <button
-                  type="submit"
-                  disabled={savingProducer}
-                  className="flex-1 rounded-lg bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 transition disabled:opacity-60"
-                >
-                  {savingProducer
-                    ? "Salvando..."
-                    : editingProducerId
-                    ? "Atualizar produtor"
-                    : "Salvar produtor"}
-                </button>
-
-                {editingProducerId && (
-                  <button
-                    type="button"
-                    onClick={resetProducerForm}
-                    className="rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 hover:bg-zinc-100 transition"
-                  >
-                    Cancelar
-                  </button>
-                )}
-              </div>
-            </form>
-
-            <MessageText
-              message={producerMessage}
-              type={
-                producerMessage.toLowerCase().includes("sucesso")
-                  ? "success"
-                  : producerMessage
-                  ? "error"
-                  : "default"
-              }
-            />
-          </div>
-
-          <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
-            <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
-              {editingPropertyId
-                ? "Editar propriedade"
-                : "Cadastrar propriedade"}
-            </h2>
-
-            <form onSubmit={handlePropertySubmit} className="mt-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
-                  Nome da propriedade
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={propertyForm.name}
-                  onChange={handlePropertyChange}
-                  placeholder="Ex.: Fazenda Boa Esperança"
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
-                  Cidade
-                </label>
-                <input
-                  type="text"
-                  name="city"
-                  value={propertyForm.city}
-                  onChange={handlePropertyChange}
-                  placeholder="Ex.: Contagem"
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
-                  Produtor responsável
-                </label>
-                <select
-                  name="producerId"
-                  value={propertyForm.producerId}
-                  onChange={handlePropertyChange}
-                  className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
-                  required
-                >
-                  <option value="">Selecione um produtor</option>
-                  {producers.map((producer) => (
-                    <option key={producer.id} value={producer.id}>
-                      {producer.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <button
-                  type="submit"
-                  disabled={savingProperty || producers.length === 0}
-                  className="flex-1 rounded-lg bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 transition disabled:opacity-60"
-                >
-                  {savingProperty
-                    ? "Salvando..."
-                    : editingPropertyId
-                    ? "Atualizar propriedade"
-                    : "Salvar propriedade"}
-                </button>
-
-                {editingPropertyId && (
-                  <button
-                    type="button"
-                    onClick={resetPropertyForm}
-                    className="rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 hover:bg-zinc-100 transition"
-                  >
-                    Cancelar
-                  </button>
-                )}
-              </div>
-            </form>
-
-            {producers.length === 0 && (
-              <MessageText
-                message="Cadastre pelo menos um produtor antes de cadastrar uma propriedade."
-                type="warning"
-              />
-            )}
-
-            <MessageText
-              message={propertyMessage}
-              type={
-                propertyMessage.toLowerCase().includes("sucesso")
-                  ? "success"
-                  : propertyMessage
-                  ? "error"
-                  : "default"
-              }
-            />
-          </div>
-        </div>
-
-        <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
-          <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
-            Cadastrar tarefa sanitária
-          </h2>
-
-          <form onSubmit={handleTaskSubmit} className="mt-6 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
-                Propriedade
-              </label>
-              <select
-                name="propertyId"
-                value={taskForm.propertyId}
-                onChange={handleTaskChange}
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
-                required
+        {/* Nav links */}
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          {navItems.map((item) => {
+            const isActive = activeSection === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveSection(item.id)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition ${
+                  isActive
+                    ? "bg-zinc-900 text-white"
+                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+                }`}
               >
-                <option value="">Selecione uma propriedade</option>
-                {properties.map((property) => (
-                  <option key={property.id} value={property.id}>
-                    {property.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+                {item.icon}
+                <span className="flex-1 text-left">{item.label}</span>
+                {item.badge > 0 && (
+                  <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${isActive ? "bg-white text-zinc-900" : "bg-zinc-900 text-white"}`}>
+                    {item.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
 
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
-                Título da tarefa
-              </label>
-              <input
-                type="text"
-                name="title"
-                value={taskForm.title}
-                onChange={handleTaskChange}
-                placeholder="Ex.: Aplicar vacina clostridial"
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
-                Descrição
-              </label>
-              <textarea
-                name="description"
-                value={taskForm.description}
-                onChange={handleTaskChange}
-                placeholder="Descreva a orientação sanitária"
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 min-h-[110px]"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-zinc-700 mb-1">
-                Data
-              </label>
-              <input
-                type="date"
-                name="date"
-                value={taskForm.date}
-                onChange={handleTaskChange}
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={savingTask || properties.length === 0}
-              className="w-full rounded-lg bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 transition disabled:opacity-60"
-            >
-              {savingTask ? "Salvando..." : "Salvar tarefa"}
-            </button>
-          </form>
-
-          {properties.length === 0 && (
-            <MessageText
-              message="Cadastre pelo menos uma propriedade antes de criar tarefas sanitárias."
-              type="warning"
-            />
-          )}
-
-          <MessageText
-            message={taskMessage}
-            type={
-              taskMessage.toLowerCase().includes("sucesso")
-                ? "success"
-                : taskMessage
-                ? "error"
-                : "default"
-            }
-          />
-        </div>
-
-        <ReproductionModule
-          properties={properties}
-          vetUid={vetUid}
-          onStatsChange={setReproductionStats}
-        />
-
-        <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
-          <SectionCard title="Meus produtores" onRefresh={loadProducers}>
-            <div className="mb-5 sm:mb-6">
-              <input
-                type="text"
-                value={producerSearch}
-                onChange={(e) => setProducerSearch(e.target.value)}
-                placeholder="Buscar produtor por nome, e-mail ou telefone"
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-              />
-            </div>
-
-            {loadingProducers ? (
-              <EmptyState text="Carregando produtores..." />
-            ) : filteredProducers.length === 0 ? (
-              <EmptyState text="Nenhum produtor cadastrado ainda." />
-            ) : (
-              <div className="space-y-4">
-                {filteredProducers.map((producer) => (
-                  <div
-                    key={producer.id}
-                    className="rounded-xl border border-zinc-200 p-4"
-                  >
-                    <div className="grid gap-4 lg:grid-cols-[1fr_180px]">
-                      <div>
-                        <p className="text-lg font-semibold text-zinc-800">
-                          {producer.name}
-                        </p>
-                        <p className="mt-1 text-sm text-zinc-600">
-                          E-mail: {producer.email}
-                        </p>
-                        <p className="mt-1 text-sm text-zinc-600">
-                          Telefone: {producer.phone}
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={() => handleEditProducer(producer)}
-                        className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition sm:w-auto"
-                      >
-                        Editar
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </SectionCard>
-
-          <SectionCard title="Minhas propriedades" onRefresh={loadProperties}>
-            <div className="mb-5 sm:mb-6">
-              <input
-                type="text"
-                value={propertySearch}
-                onChange={(e) => setPropertySearch(e.target.value)}
-                placeholder="Buscar propriedade por nome, cidade ou produtor"
-                className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-              />
-            </div>
-
-            {loadingProperties ? (
-              <EmptyState text="Carregando propriedades..." />
-            ) : filteredProperties.length === 0 ? (
-              <EmptyState text="Nenhuma propriedade cadastrada ainda." />
-            ) : (
-              <div className="space-y-4">
-                {filteredProperties.map((property) => (
-                  <div
-                    key={property.id}
-                    className="rounded-xl border border-zinc-200 p-4"
-                  >
-                    <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
-                      <div>
-                        <p className="text-lg font-semibold text-zinc-800">
-                          {property.name}
-                        </p>
-                        <p className="mt-1 text-sm text-zinc-600">
-                          Cidade: {property.city}
-                        </p>
-                        <p className="mt-1 text-sm text-zinc-600">
-                          Produtor: {property.producerName || "Não vinculado"}
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={() => handleEditProperty(property)}
-                        className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition sm:w-auto"
-                      >
-                        Editar
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </SectionCard>
-        </div>
-
-        <SectionCard title="Tarefas sanitárias" onRefresh={loadTasks}>
-          <div className="mb-5 grid gap-3 sm:mb-6 md:grid-cols-2 lg:grid-cols-4">
-            <input
-              type="text"
-              value={taskSearch}
-              onChange={(e) => setTaskSearch(e.target.value)}
-              placeholder="Buscar tarefa"
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-            />
-
-            <select
-              value={taskPropertyFilter}
-              onChange={(e) => setTaskPropertyFilter(e.target.value)}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
-            >
-              <option value="">Todas as propriedades</option>
-              {properties.map((property) => (
-                <option key={property.id} value={property.id}>
-                  {property.name}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={taskStatusFilter}
-              onChange={(e) => setTaskStatusFilter(e.target.value)}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
-            >
-              <option value="">Todos os status</option>
-              <option value="pendente">Pendente</option>
-              <option value="concluida">Concluída</option>
-            </select>
-
-            <button
-              type="button"
-              onClick={clearTaskFilters}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100 transition"
-            >
-              Limpar filtros
-            </button>
+        {/* Rodapé da sidebar: usuário + sair */}
+        <div className="px-3 py-4 border-t border-zinc-100 space-y-1">
+          <div className="px-3 py-2">
+            <p className="text-xs font-medium text-zinc-500 truncate">{userData.name}</p>
+            <p className="text-xs text-zinc-400 truncate">{userData.email}</p>
           </div>
+          <button
+            onClick={onLogout}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 transition"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Sair
+          </button>
+        </div>
+      </aside>
 
-          {loadingTasks ? (
-            <EmptyState text="Carregando tarefas..." />
-          ) : filteredTasks.length === 0 ? (
-            <EmptyState text="Nenhuma tarefa cadastrada ainda." />
-          ) : (
-            <div className="space-y-4">
-              {filteredTasks.map((task) => (
-                <div
-                  key={task.id}
-                  className="rounded-xl border border-zinc-200 p-4"
-                >
-                  <p className="text-lg font-semibold text-zinc-800">
-                    {task.title}
-                  </p>
-                  <p className="mt-1 text-sm text-zinc-600">
-                    Propriedade: {task.propertyName}
-                  </p>
-                  <p className="mt-1 text-sm text-zinc-600">
-                    Produtor: {task.producerName}
-                  </p>
-                  <p className="mt-1 text-sm text-zinc-600">
-                    Data: {formatDateBR(task.date)}
-                  </p>
+      {/* Conteúdo principal */}
+      <main className="flex-1 lg:ml-60 pb-20 lg:pb-0">
+        <div className="mx-auto w-full max-w-4xl px-3 py-4 sm:px-6 sm:py-8 space-y-5 sm:space-y-6">
 
-                  <div className="mt-3">
-                    <span
-                      className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${getTaskStatusBadgeClass(
-                        task.status
-                      )}`}
-                    >
-                      {taskStatusLabel(task.status)}
-                    </span>
-                  </div>
-
-                  <p className="mt-3 text-sm text-zinc-700">
-                    {task.description}
-                  </p>
+          {/* SEÇÃO: Visão Geral */}
+          {activeSection === "visao-geral" && (
+            <>
+              <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
+                <h1 className="text-2xl font-bold text-zinc-800 sm:text-3xl">
+                  Painel do Veterinário
+                </h1>
+                <p className="mt-3 text-zinc-600">
+                  Bem-vindo, <span className="font-semibold">{userData.name}</span>.
+                </p>
+                <div className="mt-6 grid gap-4 md:grid-cols-2">
+                  {dashboardCards.map((card) => (
+                    <InfoCard
+                      key={card.label}
+                      label={card.label}
+                      value={card.value}
+                      valueClassName={card.valueClassName}
+                    />
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+
+              <div>
+                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">
+                  Precisa de atenção
+                </h2>
+                <div className="grid grid-cols-2 gap-3">
+                  <button onClick={() => setActiveSection("tarefas")} className="text-left">
+                    <PriorityCard label="Tarefas pendentes" value={pendingTasksCount} tone="warning" />
+                  </button>
+                  <button onClick={() => setActiveSection("ocorrencias")} className="text-left">
+                    <PriorityCard label="Ocorrências abertas" value={openOccurrencesCount} tone="danger" />
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">
+                  Visão geral
+                </h2>
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+                  <SummaryCard label="Produtores" value={totalProducers} />
+                  <SummaryCard label="Propriedades" value={totalProperties} />
+                  <SummaryCard label="Animais cadastrados" value={reproductionStats.animals} />
+                  <SummaryCard label="Animais ativos" value={reproductionStats.activeAnimals} />
+                  <SummaryCard label="Fêmeas" value={reproductionStats.females} />
+                  <SummaryCard label="Machos" value={reproductionStats.males} />
+                </div>
+              </div>
+
+              {/* Botão Sair visível só no mobile (sidebar não existe) */}
+              <div className="lg:hidden">
+                <button
+                  onClick={onLogout}
+                  className="w-full rounded-lg border border-zinc-300 py-3 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition"
+                >
+                  Sair
+                </button>
+              </div>
+            </>
           )}
 
-          <MessageText message={taskMessage} />
-        </SectionCard>
-
-        <SectionCard title="Ocorrências recebidas" onRefresh={loadOccurrences}>
-          <div className="mb-5 grid gap-3 sm:mb-6 md:grid-cols-2 lg:grid-cols-4">
-            <input
-              type="text"
-              value={occurrenceSearch}
-              onChange={(e) => setOccurrenceSearch(e.target.value)}
-              placeholder="Buscar ocorrência"
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800"
-            />
-
-            <select
-              value={occurrencePropertyFilter}
-              onChange={(e) => setOccurrencePropertyFilter(e.target.value)}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
-            >
-              <option value="">Todas as propriedades</option>
-              {properties.map((property) => (
-                <option key={property.id} value={property.id}>
-                  {property.name}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={occurrenceStatusFilter}
-              onChange={(e) => setOccurrenceStatusFilter(e.target.value)}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white"
-            >
-              <option value="">Todos os status</option>
-              <option value="aberta">Aberta</option>
-              <option value="em_analise">Em análise</option>
-              <option value="resolvida">Resolvida</option>
-            </select>
-
-            <button
-              type="button"
-              onClick={clearOccurrenceFilters}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100 transition"
-            >
-              Limpar filtros
-            </button>
-          </div>
-
-          {loadingOccurrences ? (
-            <EmptyState text="Carregando ocorrências..." />
-          ) : filteredOccurrences.length === 0 ? (
-            <EmptyState text="Nenhuma ocorrência recebida ainda." />
-          ) : (
-            <div className="space-y-4">
-              {filteredOccurrences.map((occurrence) => (
-                <div
-                  key={occurrence.id}
-                  className="rounded-xl border border-zinc-200 p-4"
-                >
-                  <div className="flex flex-col items-start justify-between gap-4 lg:flex-row">
-                    <div className="w-full flex-1">
-                      <p className="text-lg font-semibold text-zinc-800">
-                        {occurrence.title}
-                      </p>
-                      <p className="mt-1 text-sm text-zinc-600">
-                        Propriedade: {occurrence.propertyName}
-                      </p>
-                      <p className="mt-1 text-sm text-zinc-600">
-                        Produtor: {occurrence.producerName}
-                      </p>
-                      <p className="mt-1 text-sm text-zinc-600">
-                        Data: {formatDateBR(occurrence.date)}
-                      </p>
-
-                      <div className="mt-3">
-                        <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${getOccurrenceStatusBadgeClass(
-                            occurrence.status
-                          )}`}
-                        >
-                          {occurrenceStatusLabel(occurrence.status)}
-                        </span>
-                      </div>
-
-                      <p className="mt-3 text-sm text-zinc-700">
-                        {occurrence.description}
-                      </p>
-
-                      <div className="mt-4">
-                        <label className="block text-sm font-medium text-zinc-700 mb-1">
-                          Resposta / orientação do veterinário
-                        </label>
-
-                        <textarea
-                          value={occurrenceResponses[occurrence.id] || ""}
-                          onChange={(e) =>
-                            handleOccurrenceResponseChange(
-                              occurrence.id,
-                              e.target.value
-                            )
-                          }
-                          placeholder="Ex.: Isolar o animal, aferir temperatura 2x ao dia e iniciar protocolo conforme avaliação clínica."
-                          className="w-full min-h-[160px] resize-y rounded-lg border border-zinc-300 px-3 py-3 text-base leading-relaxed outline-none focus:border-zinc-800 sm:min-h-[130px] lg:min-h-[150px]"
-                        />
-
-                        <button
-                          onClick={() =>
-                            handleSaveOccurrenceResponse(occurrence.id)
-                          }
-                          disabled={savingResponseId === occurrence.id}
-                          className="mt-3 w-full rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition disabled:opacity-60 sm:w-auto"
-                        >
-                          {savingResponseId === occurrence.id
-                            ? "Salvando resposta..."
-                            : "Salvar resposta"}
-                        </button>
-                      </div>
+          {/* SEÇÃO: Produtores + Propriedades */}
+          {activeSection === "produtores" && (
+            <>
+              <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
+                <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
+                  <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
+                    {editingProducerId ? "Editar produtor" : "Cadastrar produtor"}
+                  </h2>
+                  <form onSubmit={handleProducerSubmit} className="mt-6 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-zinc-700 mb-1">Nome</label>
+                      <input type="text" name="name" value={producerForm.name} onChange={handleProducerChange} placeholder="Ex.: João Ferreira" className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800" required />
                     </div>
+                    <div>
+                      <label className="block text-sm font-medium text-zinc-700 mb-1">E-mail</label>
+                      <input type="email" name="email" value={producerForm.email} onChange={handleProducerChange} placeholder="Ex.: joao@email.com" className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800" required />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-zinc-700 mb-1">Telefone</label>
+                      <input type="text" name="phone" value={producerForm.phone} onChange={handleProducerChange} placeholder="Ex.: (31) 99999-0000" className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800" required />
+                    </div>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <button type="submit" disabled={savingProducer} className="flex-1 rounded-lg bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 transition disabled:opacity-60">
+                        {savingProducer ? "Salvando..." : editingProducerId ? "Atualizar produtor" : "Salvar produtor"}
+                      </button>
+                      {editingProducerId && (
+                        <button type="button" onClick={resetProducerForm} className="rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 hover:bg-zinc-100 transition">Cancelar</button>
+                      )}
+                    </div>
+                  </form>
+                  <MessageText message={producerMessage} type={producerMessage.toLowerCase().includes("sucesso") ? "success" : producerMessage ? "error" : "default"} />
+                </div>
 
-                    <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3 lg:flex lg:w-[180px] lg:flex-col">
-                      {occurrenceStatusOptions.map((option) => (
-                        <button
-                          key={option.value}
-                          onClick={() =>
-                            handleOccurrenceStatusChange(
-                              occurrence.id,
-                              option.value
-                            )
-                          }
-                          disabled={updatingOccurrenceId === occurrence.id}
-                          className={getOccurrenceStatusButtonClass(
-                            occurrence.status,
-                            option.value
-                          )}
-                        >
-                          {updatingOccurrenceId === occurrence.id
-                            ? "Atualizando..."
-                            : option.label}
-                        </button>
+                <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
+                  <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
+                    {editingPropertyId ? "Editar propriedade" : "Cadastrar propriedade"}
+                  </h2>
+                  <form onSubmit={handlePropertySubmit} className="mt-6 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-zinc-700 mb-1">Nome da propriedade</label>
+                      <input type="text" name="name" value={propertyForm.name} onChange={handlePropertyChange} placeholder="Ex.: Fazenda Boa Esperança" className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800" required />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-zinc-700 mb-1">Cidade</label>
+                      <input type="text" name="city" value={propertyForm.city} onChange={handlePropertyChange} placeholder="Ex.: Contagem" className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800" required />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-zinc-700 mb-1">Produtor responsável</label>
+                      <select name="producerId" value={propertyForm.producerId} onChange={handlePropertyChange} className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white" required>
+                        <option value="">Selecione um produtor</option>
+                        {producers.map((producer) => (
+                          <option key={producer.id} value={producer.id}>{producer.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <button type="submit" disabled={savingProperty || producers.length === 0} className="flex-1 rounded-lg bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 transition disabled:opacity-60">
+                        {savingProperty ? "Salvando..." : editingPropertyId ? "Atualizar propriedade" : "Salvar propriedade"}
+                      </button>
+                      {editingPropertyId && (
+                        <button type="button" onClick={resetPropertyForm} className="rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 hover:bg-zinc-100 transition">Cancelar</button>
+                      )}
+                    </div>
+                  </form>
+                  {producers.length === 0 && <MessageText message="Cadastre pelo menos um produtor antes de cadastrar uma propriedade." type="warning" />}
+                  <MessageText message={propertyMessage} type={propertyMessage.toLowerCase().includes("sucesso") ? "success" : propertyMessage ? "error" : "default"} />
+                </div>
+              </div>
+
+              <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
+                <SectionCard title="Meus produtores" onRefresh={loadProducers}>
+                  <div className="mb-5 sm:mb-6">
+                    <input type="text" value={producerSearch} onChange={(e) => setProducerSearch(e.target.value)} placeholder="Buscar produtor por nome, e-mail ou telefone" className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800" />
+                  </div>
+                  {loadingProducers ? <EmptyState text="Carregando produtores..." /> : filteredProducers.length === 0 ? <EmptyState text="Nenhum produtor cadastrado ainda." /> : (
+                    <div className="space-y-4">
+                      {filteredProducers.map((producer) => (
+                        <div key={producer.id} className="rounded-xl border border-zinc-200 p-4">
+                          <div className="grid gap-4 lg:grid-cols-[1fr_180px]">
+                            <div>
+                              <p className="text-lg font-semibold text-zinc-800">{producer.name}</p>
+                              <p className="mt-1 text-sm text-zinc-600">E-mail: {producer.email}</p>
+                              <p className="mt-1 text-sm text-zinc-600">Telefone: {producer.phone}</p>
+                            </div>
+                            <button onClick={() => handleEditProducer(producer)} className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition sm:w-auto">Editar</button>
+                          </div>
+                        </div>
                       ))}
                     </div>
+                  )}
+                </SectionCard>
+
+                <SectionCard title="Minhas propriedades" onRefresh={loadProperties}>
+                  <div className="mb-5 sm:mb-6">
+                    <input type="text" value={propertySearch} onChange={(e) => setPropertySearch(e.target.value)} placeholder="Buscar propriedade por nome, cidade ou produtor" className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800" />
                   </div>
-                </div>
-              ))}
-            </div>
+                  {loadingProperties ? <EmptyState text="Carregando propriedades..." /> : filteredProperties.length === 0 ? <EmptyState text="Nenhuma propriedade cadastrada ainda." /> : (
+                    <div className="space-y-4">
+                      {filteredProperties.map((property) => (
+                        <div key={property.id} className="rounded-xl border border-zinc-200 p-4">
+                          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
+                            <div>
+                              <p className="text-lg font-semibold text-zinc-800">{property.name}</p>
+                              <p className="mt-1 text-sm text-zinc-600">Cidade: {property.city}</p>
+                              <p className="mt-1 text-sm text-zinc-600">Produtor: {property.producerName || "Não vinculado"}</p>
+                            </div>
+                            <button onClick={() => handleEditProperty(property)} className="w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition sm:w-auto">Editar</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </SectionCard>
+              </div>
+            </>
           )}
 
-          <MessageText message={occurrenceMessage} />
-        </SectionCard>
+          {/* SEÇÃO: Tarefas */}
+          {activeSection === "tarefas" && (
+            <>
+              <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-8">
+                <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">Cadastrar tarefa sanitária</h2>
+                <form onSubmit={handleTaskSubmit} className="mt-6 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">Propriedade</label>
+                    <select name="propertyId" value={taskForm.propertyId} onChange={handleTaskChange} className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white" required>
+                      <option value="">Selecione uma propriedade</option>
+                      {properties.map((property) => (
+                        <option key={property.id} value={property.id}>{property.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">Título da tarefa</label>
+                    <input type="text" name="title" value={taskForm.title} onChange={handleTaskChange} placeholder="Ex.: Aplicar vacina clostridial" className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800" required />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">Descrição</label>
+                    <textarea name="description" value={taskForm.description} onChange={handleTaskChange} placeholder="Descreva a orientação sanitária" className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 min-h-[110px]" required />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">Data</label>
+                    <input type="date" name="date" value={taskForm.date} onChange={handleTaskChange} className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800" required />
+                  </div>
+                  <button type="submit" disabled={savingTask || properties.length === 0} className="w-full rounded-lg bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 transition disabled:opacity-60">
+                    {savingTask ? "Salvando..." : "Salvar tarefa"}
+                  </button>
+                </form>
+                {properties.length === 0 && <MessageText message="Cadastre pelo menos uma propriedade antes de criar tarefas sanitárias." type="warning" />}
+                <MessageText message={taskMessage} type={taskMessage.toLowerCase().includes("sucesso") ? "success" : taskMessage ? "error" : "default"} />
+              </div>
 
-        <button
-          onClick={onLogout}
-          className="w-full rounded-lg bg-zinc-900 py-3 text-white font-medium hover:bg-zinc-800 transition"
-        >
-          Sair
-        </button>
-      </div>
+              <SectionCard title="Tarefas sanitárias" onRefresh={loadTasks}>
+                <div className="mb-5 grid gap-3 sm:mb-6 md:grid-cols-2 lg:grid-cols-4">
+                  <input type="text" value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder="Buscar tarefa" className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800" />
+                  <select value={taskPropertyFilter} onChange={(e) => setTaskPropertyFilter(e.target.value)} className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white">
+                    <option value="">Todas as propriedades</option>
+                    {properties.map((property) => <option key={property.id} value={property.id}>{property.name}</option>)}
+                  </select>
+                  <select value={taskStatusFilter} onChange={(e) => setTaskStatusFilter(e.target.value)} className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white">
+                    <option value="">Todos os status</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="concluida">Concluída</option>
+                  </select>
+                  <button type="button" onClick={clearTaskFilters} className="w-full rounded-lg border border-zinc-300 px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100 transition">Limpar filtros</button>
+                </div>
+                {loadingTasks ? <EmptyState text="Carregando tarefas..." /> : filteredTasks.length === 0 ? <EmptyState text="Nenhuma tarefa cadastrada ainda." /> : (
+                  <div className="space-y-4">
+                    {filteredTasks.map((task) => (
+                      <div key={task.id} className="rounded-xl border border-zinc-200 p-4">
+                        <p className="text-lg font-semibold text-zinc-800">{task.title}</p>
+                        <p className="mt-1 text-sm text-zinc-600">Propriedade: {task.propertyName}</p>
+                        <p className="mt-1 text-sm text-zinc-600">Produtor: {task.producerName}</p>
+                        <p className="mt-1 text-sm text-zinc-600">Data: {formatDateBR(task.date)}</p>
+                        <div className="mt-3">
+                          <span className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${getTaskStatusBadgeClass(task.status)}`}>{taskStatusLabel(task.status)}</span>
+                        </div>
+                        <p className="mt-3 text-sm text-zinc-700">{task.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <MessageText message={taskMessage} />
+              </SectionCard>
+            </>
+          )}
+
+          {/* SEÇÃO: Ocorrências */}
+          {activeSection === "ocorrencias" && (
+            <SectionCard title="Ocorrências recebidas" onRefresh={loadOccurrences}>
+              <div className="mb-5 grid gap-3 sm:mb-6 md:grid-cols-2 lg:grid-cols-4">
+                <input type="text" value={occurrenceSearch} onChange={(e) => setOccurrenceSearch(e.target.value)} placeholder="Buscar ocorrência" className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800" />
+                <select value={occurrencePropertyFilter} onChange={(e) => setOccurrencePropertyFilter(e.target.value)} className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white">
+                  <option value="">Todas as propriedades</option>
+                  {properties.map((property) => <option key={property.id} value={property.id}>{property.name}</option>)}
+                </select>
+                <select value={occurrenceStatusFilter} onChange={(e) => setOccurrenceStatusFilter(e.target.value)} className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-800 bg-white">
+                  <option value="">Todos os status</option>
+                  <option value="aberta">Aberta</option>
+                  <option value="em_analise">Em análise</option>
+                  <option value="resolvida">Resolvida</option>
+                </select>
+                <button type="button" onClick={clearOccurrenceFilters} className="w-full rounded-lg border border-zinc-300 px-3 py-2 font-medium text-zinc-700 hover:bg-zinc-100 transition">Limpar filtros</button>
+              </div>
+              {loadingOccurrences ? <EmptyState text="Carregando ocorrências..." /> : filteredOccurrences.length === 0 ? <EmptyState text="Nenhuma ocorrência recebida ainda." /> : (
+                <div className="space-y-4">
+                  {filteredOccurrences.map((occurrence) => (
+                    <div key={occurrence.id} className="rounded-xl border border-zinc-200 p-4">
+                      <div className="flex flex-col items-start justify-between gap-4 lg:flex-row">
+                        <div className="w-full flex-1">
+                          <p className="text-lg font-semibold text-zinc-800">{occurrence.title}</p>
+                          <p className="mt-1 text-sm text-zinc-600">Propriedade: {occurrence.propertyName}</p>
+                          <p className="mt-1 text-sm text-zinc-600">Produtor: {occurrence.producerName}</p>
+                          <p className="mt-1 text-sm text-zinc-600">Data: {formatDateBR(occurrence.date)}</p>
+                          <div className="mt-3">
+                            <span className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${getOccurrenceStatusBadgeClass(occurrence.status)}`}>{occurrenceStatusLabel(occurrence.status)}</span>
+                          </div>
+                          <p className="mt-3 text-sm text-zinc-700">{occurrence.description}</p>
+                          <div className="mt-4">
+                            <label className="block text-sm font-medium text-zinc-700 mb-1">Resposta / orientação do veterinário</label>
+                            <textarea value={occurrenceResponses[occurrence.id] || ""} onChange={(e) => handleOccurrenceResponseChange(occurrence.id, e.target.value)} placeholder="Ex.: Isolar o animal, aferir temperatura 2x ao dia e iniciar protocolo conforme avaliação clínica." className="w-full min-h-[160px] resize-y rounded-lg border border-zinc-300 px-3 py-3 text-base leading-relaxed outline-none focus:border-zinc-800 sm:min-h-[130px] lg:min-h-[150px]" />
+                            <button onClick={() => handleSaveOccurrenceResponse(occurrence.id)} disabled={savingResponseId === occurrence.id} className="mt-3 w-full rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition disabled:opacity-60 sm:w-auto">
+                              {savingResponseId === occurrence.id ? "Salvando resposta..." : "Salvar resposta"}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3 lg:flex lg:w-[180px] lg:flex-col">
+                          {occurrenceStatusOptions.map((option) => (
+                            <button key={option.value} onClick={() => handleOccurrenceStatusChange(occurrence.id, option.value)} disabled={updatingOccurrenceId === occurrence.id} className={getOccurrenceStatusButtonClass(occurrence.status, option.value)}>
+                              {updatingOccurrenceId === occurrence.id ? "Atualizando..." : option.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <MessageText message={occurrenceMessage} />
+            </SectionCard>
+          )}
+
+          {/* SEÇÃO: Reprodução */}
+          {activeSection === "reproducao" && (
+            <ReproductionModule
+              properties={properties}
+              vetUid={vetUid}
+              onStatsChange={setReproductionStats}
+            />
+          )}
+
+        </div>
+      </main>
+
+      {/* Bottom Nav - visível apenas em mobile (abaixo de lg) */}
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-zinc-200 z-50">
+        <div className="flex items-stretch">
+          {navItems.map((item) => {
+            const isActive = activeSection === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveSection(item.id)}
+                className={`relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-medium transition ${
+                  isActive ? "text-zinc-900" : "text-zinc-400"
+                }`}
+              >
+                {item.badge > 0 && (
+                  <span className="absolute top-1.5 right-[calc(50%-14px)] flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
+                    {item.badge}
+                  </span>
+                )}
+                <span className={isActive ? "text-zinc-900" : "text-zinc-400"}>{item.icon}</span>
+                <span>{item.label}</span>
+                {isActive && <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-8 rounded-full bg-zinc-900" />}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
     </div>
   );
 }
