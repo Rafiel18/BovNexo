@@ -68,6 +68,95 @@ function MessageText({ message, type = "default" }) {
   );
 }
 
+function CalvingAlerts({ records }) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const alerts = records
+    .filter((r) => r.expectedCalvingDate)
+    .map((r) => {
+      const calving = new Date(r.expectedCalvingDate + "T00:00:00");
+      const diffDays = Math.round((calving - today) / (1000 * 60 * 60 * 24));
+      return { ...r, diffDays, calving };
+    })
+    .filter((r) => r.diffDays <= 30)
+    .sort((a, b) => a.diffDays - b.diffDays);
+
+  if (alerts.length === 0) return null;
+
+  function urgencyConfig(diffDays) {
+    if (diffDays < 0)
+      return {
+        label: `Atrasado ${Math.abs(diffDays)}d`,
+        bg: "bg-red-50 border-red-300",
+        badge: "bg-red-100 text-red-700",
+        dot: "bg-red-500",
+      };
+    if (diffDays === 0)
+      return {
+        label: "Hoje",
+        bg: "bg-red-50 border-red-300",
+        badge: "bg-red-100 text-red-700",
+        dot: "bg-red-500",
+      };
+    if (diffDays <= 7)
+      return {
+        label: `em ${diffDays}d`,
+        bg: "bg-amber-50 border-amber-300",
+        badge: "bg-amber-100 text-amber-700",
+        dot: "bg-amber-500",
+      };
+    return {
+      label: `em ${diffDays}d`,
+      bg: "bg-blue-50 border-blue-200",
+      badge: "bg-blue-100 text-blue-700",
+      dot: "bg-blue-400",
+    };
+  }
+
+  return (
+    <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-6">
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-lg">🐄</span>
+        <h2 className="text-base font-bold text-zinc-800">
+          Previsões de parto próximas
+        </h2>
+        <span className="ml-auto text-xs font-semibold bg-zinc-900 text-white px-2 py-0.5 rounded-full">
+          {alerts.length}
+        </span>
+      </div>
+      <div className="space-y-3">
+        {alerts.map((r) => {
+          const cfg = urgencyConfig(r.diffDays);
+          return (
+            <div
+              key={r.id}
+              className={`flex items-center gap-3 rounded-xl border p-3 ${cfg.bg}`}
+            >
+              <span className={`h-2 w-2 rounded-full flex-shrink-0 ${cfg.dot}`} />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-zinc-800 truncate">
+                  {r.animalIdentification}
+                  {r.animalName ? ` — ${r.animalName}` : ""}
+                </p>
+                <p className="text-xs text-zinc-500 truncate">
+                  {r.propertyName} · Parto previsto:{" "}
+                  {r.calving.toLocaleDateString("pt-BR")}
+                </p>
+              </div>
+              <span
+                className={`text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${cfg.badge}`}
+              >
+                {cfg.label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function ProducerReproductionModule({ producerId, properties, onStatsChange }) {
   const [animals, setAnimals] = useState([]);
   const [records, setRecords] = useState([]);
@@ -89,14 +178,24 @@ function ProducerReproductionModule({ producerId, properties, onStatsChange }) {
   useEffect(() => {
     if (!onStatsChange) return;
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const calvingAlerts = records.filter((r) => {
+      if (!r.expectedCalvingDate) return false;
+      const calving = new Date(r.expectedCalvingDate + "T00:00:00");
+      const diffDays = Math.round((calving - today) / (1000 * 60 * 60 * 24));
+      return diffDays <= 30;
+    }).length;
+
     onStatsChange({
       animals: animals.length,
       activeAnimals: animals.filter((animal) => animal.status === "ativo")
         .length,
       females: animals.filter((animal) => animal.sex === "femea").length,
       males: animals.filter((animal) => animal.sex === "macho").length,
+      calvingAlerts,
     });
-  }, [animals, onStatsChange]);
+  }, [animals, records, onStatsChange]);
 
   async function loadAnimals() {
     if (!producerId) return;
@@ -233,6 +332,7 @@ function ProducerReproductionModule({ producerId, properties, onStatsChange }) {
 
   return (
     <div className="space-y-6">
+      <CalvingAlerts records={records} />
       <SectionCard title="Meus animais" onRefresh={loadAnimals}>
         <div className="mb-6 grid gap-3 md:grid-cols-4">
           <input
