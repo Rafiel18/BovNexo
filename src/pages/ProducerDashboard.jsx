@@ -479,7 +479,7 @@ function ProducerDashboard({ userData, onLogout }) {
       </aside>
 
       {/* Conteúdo principal */}
-      <main className="flex-1 lg:ml-60 pb-20 lg:pb-0">
+      <main className="flex-1 lg:ml-60 pb-28 lg:pb-0">
         <div className="mx-auto w-full max-w-4xl px-3 py-4 sm:px-6 sm:py-8 space-y-5 sm:space-y-6">
 
           {/* SEÇÃO: Visão Geral */}
@@ -661,7 +661,7 @@ function ProducerDashboard({ userData, onLogout }) {
       </main>
 
       {/* Bottom Nav - mobile */}
-      <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-zinc-200 z-50">
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-zinc-200 z-50 safe-area-bottom">
         <div className="flex items-stretch">
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
