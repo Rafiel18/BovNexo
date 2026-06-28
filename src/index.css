@@ -1,19 +1,18 @@
 @import "tailwindcss";
 
-/* Evita scroll horizontal em qualquer tela */
-html,
-body {
-  overflow-x: hidden;
-  max-width: 100%;
+/* Garante que padding não extrapola a largura — fix para iOS Safari */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-/* Evita zoom automático no iOS em campos de formulário.
-   O !important é necessário pois classes Tailwind (text-sm etc)
-   sobrescrevem regras globais sem ele. */
+/* Evita zoom automático no iOS em campos de formulário */
 input,
 select,
 textarea {
   font-size: 16px !important;
+  max-width: 100%;
 }
 
 /* Safe area para bottom nav no iPhone (barra home) */

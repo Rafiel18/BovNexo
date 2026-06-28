@@ -29,7 +29,7 @@ const diagnosisLabels = {
 
 function SectionCard({ title, onRefresh, children }) {
   return (
-    <div className="min-w-0 overflow-hidden rounded-2xl bg-white shadow-lg p-8">
+    <div className="w-full min-w-0 rounded-2xl bg-white shadow-lg p-8">
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-2xl font-bold text-zinc-800">{title}</h2>
 
@@ -115,7 +115,7 @@ function CalvingAlerts({ records }) {
   }
 
   return (
-    <div className="rounded-2xl bg-white shadow-lg p-5 sm:p-6">
+    <div className="w-full min-w-0 rounded-2xl bg-white shadow-lg p-5 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
         <span className="text-lg">🐄</span>
         <h2 className="text-base font-bold text-zinc-800">
@@ -302,7 +302,7 @@ function ProducerReproductionModule({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full space-y-6">
       <CalvingAlerts records={records} />
       <SectionCard title="Meus animais" onRefresh={refreshAnimals}>
         <div className="mb-6 grid gap-3 md:grid-cols-4">
