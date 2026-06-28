@@ -7,6 +7,8 @@ import {
   createOccurrence,
   getOccurrencesByProducer,
 } from "../services/occurrence";
+import { getAnimalsByProducer } from "../services/animal";
+import { getReproductionRecordsByProducer } from "../services/reproduction";
 import {
   formatDateBR,
   getOccurrenceStatusBadgeClass,
@@ -111,13 +113,19 @@ function ProducerDashboard({ userData, onLogout }) {
   const [tasks, setTasks] = useState([]);
   const [properties, setProperties] = useState([]);
   const [occurrences, setOccurrences] = useState([]);
+  const [animals, setAnimals] = useState([]);
+  const [reproductionRecords, setReproductionRecords] = useState([]);
 
   const [reproductionStats, setReproductionStats] = useState({
     animals: 0,
     activeAnimals: 0,
     females: 0,
     males: 0,
+    calvingAlerts: 0,
   });
+
+  const [loadingAnimals, setLoadingAnimals] = useState(true);
+  const [loadingReproductionRecords, setLoadingReproductionRecords] = useState(true);
 
   const [occurrenceForm, setOccurrenceForm] = useState(initialOccurrenceForm);
 
@@ -196,16 +204,22 @@ function ProducerDashboard({ userData, onLogout }) {
         await linkProducerToUser(producer.id, profileId);
       }
 
-      const [producerTasks, producerProperties, producerOccurrences] =
+      const [producerTasks, producerProperties, producerOccurrences, producerAnimals, producerReproductionRecords] =
         await Promise.all([
           getTasksByProducer(producer.id),
           getPropertiesByProducer(producer.id),
           getOccurrencesByProducer(producer.id),
+          getAnimalsByProducer(producer.id),
+          getReproductionRecordsByProducer(producer.id),
         ]);
 
       setTasks(producerTasks);
       setProperties(producerProperties);
       setOccurrences(producerOccurrences);
+      setAnimals(producerAnimals);
+      setReproductionRecords(producerReproductionRecords);
+      setLoadingAnimals(false);
+      setLoadingReproductionRecords(false);
     } catch (error) {
       console.error("Erro ao carregar painel do produtor:", error);
       setTaskMessage(error.message || "Não foi possível carregar as tarefas.");
@@ -653,6 +667,12 @@ function ProducerDashboard({ userData, onLogout }) {
             <ProducerReproductionModule
               producerId={producerRecord?.id}
               properties={properties}
+              animals={animals}
+              records={reproductionRecords}
+              loadingAnimals={loadingAnimals}
+              loadingRecords={loadingReproductionRecords}
+              onAnimalsChange={setAnimals}
+              onRecordsChange={setReproductionRecords}
               onStatsChange={setReproductionStats}
             />
           )}

@@ -185,15 +185,19 @@ function EmptyState({ text }) {
   return <p className="text-zinc-500">{text}</p>;
 }
 
-function ReproductionModule({ properties, vetUid, onStatsChange }) {
+function ReproductionModule({
+  properties,
+  vetUid,
+  animals,
+  records,
+  loadingAnimals,
+  loadingRecords,
+  onAnimalsChange,
+  onRecordsChange,
+  onStatsChange,
+}) {
   const [animalForm, setAnimalForm] = useState(initialAnimalForm);
   const [recordForm, setRecordForm] = useState(initialRecordForm);
-
-  const [animals, setAnimals] = useState([]);
-  const [records, setRecords] = useState([]);
-
-  const [loadingAnimals, setLoadingAnimals] = useState(true);
-  const [loadingRecords, setLoadingRecords] = useState(true);
 
   const [savingAnimal, setSavingAnimal] = useState(false);
   const [savingRecord, setSavingRecord] = useState(false);
@@ -223,8 +227,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
 
     onStatsChange({
       animals: animals.length,
-      activeAnimals: animals.filter((animal) => animal.status === "ativo")
-        .length,
+      activeAnimals: animals.filter((animal) => animal.status === "ativo").length,
       females: animals.filter((animal) => animal.sex === "femea").length,
       males: animals.filter((animal) => animal.sex === "macho").length,
       calvingAlerts,
@@ -301,47 +304,25 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
     setRecordPropertyFilter("");
   }
 
-  async function loadAnimals() {
+  async function refreshAnimals() {
     if (!vetUid) return;
-
-    setLoadingAnimals(true);
-
     try {
       const data = await getAnimalsByVet(vetUid);
-      setAnimals(data);
+      onAnimalsChange(data);
     } catch (error) {
-      console.error("Erro ao carregar animais:", error);
-      setAnimalMessage(error.message || "Não foi possível carregar os animais.");
-    } finally {
-      setLoadingAnimals(false);
+      console.error("Erro ao atualizar animais:", error);
     }
   }
 
-  async function loadRecords() {
+  async function refreshRecords() {
     if (!vetUid) return;
-
-    setLoadingRecords(true);
-
     try {
       const data = await getReproductionRecordsByVet(vetUid);
-      setRecords(data);
+      onRecordsChange(data);
     } catch (error) {
-      console.error("Erro ao carregar registros reprodutivos:", error);
-      setRecordMessage(
-        error.message || "Não foi possível carregar os registros reprodutivos."
-      );
-    } finally {
-      setLoadingRecords(false);
+      console.error("Erro ao atualizar registros:", error);
     }
   }
-
-  async function loadReproductionData() {
-    await Promise.all([loadAnimals(), loadRecords()]);
-  }
-
-  useEffect(() => {
-    loadReproductionData();
-  }, [vetUid]);
 
   async function handleAnimalSubmit(e) {
     e.preventDefault();
@@ -377,7 +358,8 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
 
       resetAnimalForm();
       setAnimalMessage("Animal cadastrado com sucesso.");
-      await loadAnimals();
+      const updatedAnimals = await getAnimalsByVet(vetUid);
+      onAnimalsChange(updatedAnimals);
     } catch (error) {
       console.error("Erro ao salvar animal:", error);
       setAnimalMessage(error.message || "Erro ao salvar animal.");
@@ -422,7 +404,8 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
 
       resetRecordForm();
       setRecordMessage("Registro reprodutivo salvo com sucesso.");
-      await loadRecords();
+      const updatedRecords = await getReproductionRecordsByVet(vetUid);
+      onRecordsChange(updatedRecords);
     } catch (error) {
       console.error("Erro ao salvar registro reprodutivo:", error);
       setRecordMessage(error.message || "Erro ao salvar registro reprodutivo.");
@@ -844,7 +827,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
         </SectionCard>
       </div>
 
-      <SectionCard title="Animais cadastrados" onRefresh={loadAnimals}>
+      <SectionCard title="Animais cadastrados" onRefresh={refreshAnimals}>
         <div className="mb-5 grid gap-3 sm:mb-6 md:grid-cols-2 lg:grid-cols-4">
           <input
             type="text"
@@ -934,7 +917,7 @@ function ReproductionModule({ properties, vetUid, onStatsChange }) {
         )}
       </SectionCard>
 
-      <SectionCard title="Histórico reprodutivo" onRefresh={loadRecords}>
+      <SectionCard title="Histórico reprodutivo" onRefresh={refreshRecords}>
         <div className="mb-5 grid gap-3 sm:mb-6 md:grid-cols-2 lg:grid-cols-4">
           <input
             type="text"

@@ -1,10 +1,12 @@
 @import "tailwindcss";
 
-/* Evita zoom automático no iOS em campos de formulário */
+/* Evita zoom automático no iOS em campos de formulário.
+   O !important é necessário pois classes Tailwind (text-sm etc)
+   sobrescrevem regras globais sem ele. */
 input,
 select,
 textarea {
-  font-size: 16px;
+  font-size: 16px !important;
 }
 
 /* Safe area para bottom nav no iPhone (barra home) */

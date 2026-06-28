@@ -21,6 +21,9 @@ import {
   updateOccurrenceStatus,
 } from "../services/occurrence";
 
+import { getAnimalsByVet } from "../services/animal";
+import { getReproductionRecordsByVet } from "../services/reproduction";
+
 import {
   formatDateBR,
   getOccurrenceStatusBadgeClass,
@@ -154,18 +157,23 @@ function VetDashboard({ userData, authUser, onLogout }) {
   const [producers, setProducers] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [occurrences, setOccurrences] = useState([]);
+  const [animals, setAnimals] = useState([]);
+  const [reproductionRecords, setReproductionRecords] = useState([]);
 
   const [reproductionStats, setReproductionStats] = useState({
     animals: 0,
     activeAnimals: 0,
     females: 0,
     males: 0,
+    calvingAlerts: 0,
   });
 
   const [loadingProperties, setLoadingProperties] = useState(true);
   const [loadingProducers, setLoadingProducers] = useState(true);
   const [loadingTasks, setLoadingTasks] = useState(true);
   const [loadingOccurrences, setLoadingOccurrences] = useState(true);
+  const [loadingAnimals, setLoadingAnimals] = useState(true);
+  const [loadingReproductionRecords, setLoadingReproductionRecords] = useState(true);
 
   const [savingProperty, setSavingProperty] = useState(false);
   const [savingProducer, setSavingProducer] = useState(false);
@@ -369,7 +377,35 @@ function VetDashboard({ userData, authUser, onLogout }) {
     loadProducers();
     loadTasks();
     loadOccurrences();
+    loadAnimals();
+    loadReproductionRecords();
   }, [vetUid]);
+
+  async function loadAnimals() {
+    if (!vetUid) return;
+    setLoadingAnimals(true);
+    try {
+      const data = await getAnimalsByVet(vetUid);
+      setAnimals(data);
+    } catch (error) {
+      console.error("Erro ao carregar animais:", error);
+    } finally {
+      setLoadingAnimals(false);
+    }
+  }
+
+  async function loadReproductionRecords() {
+    if (!vetUid) return;
+    setLoadingReproductionRecords(true);
+    try {
+      const data = await getReproductionRecordsByVet(vetUid);
+      setReproductionRecords(data);
+    } catch (error) {
+      console.error("Erro ao carregar registros reprodutivos:", error);
+    } finally {
+      setLoadingReproductionRecords(false);
+    }
+  }
 
   async function handlePropertySubmit(e) {
     e.preventDefault();
@@ -1103,6 +1139,12 @@ function VetDashboard({ userData, authUser, onLogout }) {
             <ReproductionModule
               properties={properties}
               vetUid={vetUid}
+              animals={animals}
+              records={reproductionRecords}
+              loadingAnimals={loadingAnimals}
+              loadingRecords={loadingReproductionRecords}
+              onAnimalsChange={setAnimals}
+              onRecordsChange={setReproductionRecords}
               onStatsChange={setReproductionStats}
             />
           )}

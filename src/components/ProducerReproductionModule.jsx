@@ -157,13 +157,17 @@ function CalvingAlerts({ records }) {
   );
 }
 
-function ProducerReproductionModule({ producerId, properties, onStatsChange }) {
-  const [animals, setAnimals] = useState([]);
-  const [records, setRecords] = useState([]);
-
-  const [loadingAnimals, setLoadingAnimals] = useState(true);
-  const [loadingRecords, setLoadingRecords] = useState(true);
-
+function ProducerReproductionModule({
+  producerId,
+  properties,
+  animals,
+  records,
+  loadingAnimals,
+  loadingRecords,
+  onAnimalsChange,
+  onRecordsChange,
+  onStatsChange,
+}) {
   const [animalMessage, setAnimalMessage] = useState("");
   const [recordMessage, setRecordMessage] = useState("");
 
@@ -189,65 +193,32 @@ function ProducerReproductionModule({ producerId, properties, onStatsChange }) {
 
     onStatsChange({
       animals: animals.length,
-      activeAnimals: animals.filter((animal) => animal.status === "ativo")
-        .length,
+      activeAnimals: animals.filter((animal) => animal.status === "ativo").length,
       females: animals.filter((animal) => animal.sex === "femea").length,
       males: animals.filter((animal) => animal.sex === "macho").length,
       calvingAlerts,
     });
   }, [animals, records, onStatsChange]);
 
-  async function loadAnimals() {
+  async function refreshAnimals() {
     if (!producerId) return;
-
-    setLoadingAnimals(true);
-    setAnimalMessage("");
-
     try {
       const data = await getAnimalsByProducer(producerId);
-      setAnimals(data);
+      onAnimalsChange(data);
     } catch (error) {
-      console.error("Erro ao carregar animais do produtor:", error);
-      setAnimalMessage(error.message || "Não foi possível carregar os animais.");
-    } finally {
-      setLoadingAnimals(false);
+      console.error("Erro ao atualizar animais:", error);
     }
   }
 
-  async function loadRecords() {
+  async function refreshRecords() {
     if (!producerId) return;
-
-    setLoadingRecords(true);
-    setRecordMessage("");
-
     try {
       const data = await getReproductionRecordsByProducer(producerId);
-      setRecords(data);
+      onRecordsChange(data);
     } catch (error) {
-      console.error("Erro ao carregar histórico reprodutivo:", error);
-      setRecordMessage(
-        error.message || "Não foi possível carregar o histórico reprodutivo."
-      );
-    } finally {
-      setLoadingRecords(false);
+      console.error("Erro ao atualizar histórico:", error);
     }
   }
-
-  async function loadReproductionData() {
-    await Promise.all([loadAnimals(), loadRecords()]);
-  }
-
-  useEffect(() => {
-    if (!producerId) {
-      setAnimals([]);
-      setRecords([]);
-      setLoadingAnimals(false);
-      setLoadingRecords(false);
-      return;
-    }
-
-    loadReproductionData();
-  }, [producerId]);
 
   function clearAnimalFilters() {
     setAnimalSearch("");
@@ -333,7 +304,7 @@ function ProducerReproductionModule({ producerId, properties, onStatsChange }) {
   return (
     <div className="space-y-6">
       <CalvingAlerts records={records} />
-      <SectionCard title="Meus animais" onRefresh={loadAnimals}>
+      <SectionCard title="Meus animais" onRefresh={refreshAnimals}>
         <div className="mb-6 grid gap-3 md:grid-cols-4">
           <input
             type="text"
@@ -421,7 +392,7 @@ function ProducerReproductionModule({ producerId, properties, onStatsChange }) {
         <MessageText message={animalMessage} type="error" />
       </SectionCard>
 
-      <SectionCard title="Histórico reprodutivo" onRefresh={loadRecords}>
+      <SectionCard title="Histórico reprodutivo" onRefresh={refreshRecords}>
         <div className="mb-6 grid gap-3 md:grid-cols-4">
           <input
             type="text"
