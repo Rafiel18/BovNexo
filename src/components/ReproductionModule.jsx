@@ -160,7 +160,7 @@ function MessageText({ message, type = "default" }) {
 
 function SectionCard({ title, onRefresh, children }) {
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-lg sm:p-8">
+    <div className="min-w-0 overflow-hidden rounded-2xl bg-white p-5 shadow-lg sm:p-8">
       <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <h2 className="text-xl font-bold text-zinc-800 sm:text-2xl">
           {title}
@@ -489,7 +489,7 @@ function ReproductionModule({
   return (
     <div className="space-y-6">
       <CalvingAlerts records={records} />
-      <div className="grid gap-5 lg:grid-cols-2 lg:gap-6">
+      <div className="grid min-w-0 gap-5 lg:grid-cols-2 lg:gap-6">
         <SectionCard title="Cadastrar animal / matriz">
           <form onSubmit={handleAnimalSubmit} className="space-y-4">
             <div>

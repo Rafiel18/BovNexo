@@ -29,7 +29,7 @@ const diagnosisLabels = {
 
 function SectionCard({ title, onRefresh, children }) {
   return (
-    <div className="rounded-2xl bg-white shadow-lg p-8">
+    <div className="min-w-0 overflow-hidden rounded-2xl bg-white shadow-lg p-8">
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-2xl font-bold text-zinc-800">{title}</h2>
 

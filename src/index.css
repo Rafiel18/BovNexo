@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Evita scroll horizontal em qualquer tela */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 /* Evita zoom automático no iOS em campos de formulário.
    O !important é necessário pois classes Tailwind (text-sm etc)
    sobrescrevem regras globais sem ele. */
