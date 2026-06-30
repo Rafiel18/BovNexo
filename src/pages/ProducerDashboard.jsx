@@ -508,12 +508,6 @@ function ProducerDashboard({ userData, onLogout }) {
                   <InfoCard label="Tipo de conta" value="Produtor Rural" />
                   <InfoCard label="E-mail" value={userData.email} />
                 </div>
-                <div className="mt-4 rounded-xl border border-zinc-200 p-4">
-                  <p className="text-sm text-zinc-500">Produtor vinculado</p>
-                  <p className="break-words text-lg font-medium text-zinc-800">
-                    {loadingProducer ? "Carregando..." : producerRecord?.name || "Ainda não vinculado"}
-                  </p>
-                </div>
               </div>
 
               <div>
