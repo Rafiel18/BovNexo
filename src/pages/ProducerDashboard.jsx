@@ -525,12 +525,12 @@ function ProducerDashboard({ userData, onLogout }) {
               <div>
                 <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">Visão geral</h2>
                 <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
-                  <SummaryCard label="Tarefas concluídas" value={completedTasksCount} />
-                  <SummaryCard label="Ocorrências resolvidas" value={resolvedOccurrencesCount} />
-                  <SummaryCard label="Animais cadastrados" value={reproductionStats.animals} />
-                  <SummaryCard label="Animais ativos" value={reproductionStats.activeAnimals} />
-                  <SummaryCard label="Fêmeas" value={reproductionStats.females} />
-                  <SummaryCard label="Machos" value={reproductionStats.males} />
+                  {completedTasksCount > 0 && <SummaryCard label="Tarefas concluídas" value={completedTasksCount} />}
+                  {resolvedOccurrencesCount > 0 && <SummaryCard label="Ocorrências resolvidas" value={resolvedOccurrencesCount} />}
+                  {reproductionStats.animals > 0 && <SummaryCard label="Animais cadastrados" value={reproductionStats.animals} />}
+                  {reproductionStats.activeAnimals > 0 && <SummaryCard label="Animais ativos" value={reproductionStats.activeAnimals} />}
+                  {reproductionStats.females > 0 && <SummaryCard label="Fêmeas" value={reproductionStats.females} />}
+                  {reproductionStats.males > 0 && <SummaryCard label="Machos" value={reproductionStats.males} />}
                 </div>
               </div>
 
