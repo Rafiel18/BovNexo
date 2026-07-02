@@ -98,6 +98,31 @@ export async function createReproductionRecord({
   return mapReproductionRecord(data);
 }
 
+export async function updateReproductionRecord(recordId, data) {
+  const payload = {
+    animal_id: data.animalId,
+    event_type: data.eventType,
+    event_date: data.eventDate,
+    method: data.method || "nao_aplicavel",
+    bull_or_semen: data.bullOrSemen?.trim() || null,
+    diagnosis_result: data.diagnosisResult || "nao_aplicavel",
+    expected_calving_date: data.expectedCalvingDate || null,
+    notes: data.notes?.trim() || null,
+    property_id: data.propertyId,
+    producer_id: data.producerId,
+  };
+
+  const { error } = await supabase
+    .from("reproduction_records")
+    .update(payload)
+    .eq("id", recordId);
+
+  if (error) {
+    console.error("Erro Supabase ao atualizar registro reprodutivo:", error);
+    throw error;
+  }
+}
+
 export async function getReproductionRecordsByVet(veterinarioId) {
   const { data, error } = await supabase
     .from("reproduction_records")

@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { createAnimal, getAnimalsByVet } from "../services/animal";
+import { createAnimal, getAnimalsByVet, updateAnimal } from "../services/animal";
 import {
   createReproductionRecord,
   getReproductionRecordsByVet,
+  updateReproductionRecord,
 } from "../services/reproduction";
 import { formatDateBR } from "../utils/formatters";
 
@@ -199,6 +200,9 @@ function ReproductionModule({
   const [animalForm, setAnimalForm] = useState(initialAnimalForm);
   const [recordForm, setRecordForm] = useState(initialRecordForm);
 
+  const [editingAnimalId, setEditingAnimalId] = useState(null);
+  const [editingRecordId, setEditingRecordId] = useState(null);
+
   const [savingAnimal, setSavingAnimal] = useState(false);
   const [savingRecord, setSavingRecord] = useState(false);
 
@@ -286,10 +290,42 @@ function ReproductionModule({
 
   function resetAnimalForm() {
     setAnimalForm(initialAnimalForm);
+    setEditingAnimalId(null);
   }
 
   function resetRecordForm() {
     setRecordForm(initialRecordForm);
+    setEditingRecordId(null);
+  }
+
+  function handleEditAnimal(animal) {
+    setEditingAnimalId(animal.id);
+    setAnimalForm({
+      identification: animal.identification || "",
+      name: animal.name || "",
+      breed: animal.breed || "",
+      sex: animal.sex || "femea",
+      category: animal.category || "matriz",
+      status: animal.status || "ativo",
+      birthDate: animal.birthDate || "",
+      propertyId: animal.propertyId || "",
+    });
+    setAnimalMessage("");
+  }
+
+  function handleEditRecord(record) {
+    setEditingRecordId(record.id);
+    setRecordForm({
+      animalId: record.animalId || "",
+      eventType: record.eventType || "cio",
+      eventDate: record.eventDate || "",
+      method: record.method || "nao_aplicavel",
+      bullOrSemen: record.bullOrSemen || "",
+      diagnosisResult: record.diagnosisResult || "nao_aplicavel",
+      expectedCalvingDate: record.expectedCalvingDate || "",
+      notes: record.notes || "",
+    });
+    setRecordMessage("");
   }
 
   function clearAnimalFilters() {
@@ -343,21 +379,38 @@ function ReproductionModule({
         return;
       }
 
-      await createAnimal({
-        identification: animalForm.identification,
-        name: animalForm.name,
-        breed: animalForm.breed,
-        sex: animalForm.sex,
-        category: animalForm.category,
-        status: animalForm.status,
-        birthDate: animalForm.birthDate,
-        propertyId: selectedProperty.id,
-        producerId: selectedProperty.producerId,
-        veterinarioId: vetUid,
-      });
+      if (editingAnimalId) {
+        await updateAnimal(editingAnimalId, {
+          identification: animalForm.identification,
+          name: animalForm.name,
+          breed: animalForm.breed,
+          sex: animalForm.sex,
+          category: animalForm.category,
+          status: animalForm.status,
+          birthDate: animalForm.birthDate,
+          propertyId: selectedProperty.id,
+          producerId: selectedProperty.producerId,
+          veterinarioId: vetUid,
+        });
+        resetAnimalForm();
+        setAnimalMessage("Animal atualizado com sucesso.");
+      } else {
+        await createAnimal({
+          identification: animalForm.identification,
+          name: animalForm.name,
+          breed: animalForm.breed,
+          sex: animalForm.sex,
+          category: animalForm.category,
+          status: animalForm.status,
+          birthDate: animalForm.birthDate,
+          propertyId: selectedProperty.id,
+          producerId: selectedProperty.producerId,
+          veterinarioId: vetUid,
+        });
+        resetAnimalForm();
+        setAnimalMessage("Animal cadastrado com sucesso.");
+      }
 
-      resetAnimalForm();
-      setAnimalMessage("Animal cadastrado com sucesso.");
       const updatedAnimals = await getAnimalsByVet(vetUid);
       onAnimalsChange(updatedAnimals);
     } catch (error) {
@@ -387,23 +440,40 @@ function ReproductionModule({
         return;
       }
 
-      await createReproductionRecord({
-        animalId: selectedAnimal.id,
-        eventType: recordForm.eventType,
-        eventDate: recordForm.eventDate,
-        method: recordForm.method,
-        bullOrSemen: recordForm.bullOrSemen,
-        diagnosisResult: recordForm.diagnosisResult,
-        expectedCalvingDate: recordForm.expectedCalvingDate,
-        notes: recordForm.notes,
-        propertyId: selectedAnimal.propertyId,
-        producerId: selectedAnimal.producerId,
-        veterinarioId: vetUid,
-        createdByUserUid: vetUid,
-      });
+      if (editingRecordId) {
+        await updateReproductionRecord(editingRecordId, {
+          animalId: selectedAnimal.id,
+          eventType: recordForm.eventType,
+          eventDate: recordForm.eventDate,
+          method: recordForm.method,
+          bullOrSemen: recordForm.bullOrSemen,
+          diagnosisResult: recordForm.diagnosisResult,
+          expectedCalvingDate: recordForm.expectedCalvingDate,
+          notes: recordForm.notes,
+          propertyId: selectedAnimal.propertyId,
+          producerId: selectedAnimal.producerId,
+        });
+        resetRecordForm();
+        setRecordMessage("Registro reprodutivo atualizado com sucesso.");
+      } else {
+        await createReproductionRecord({
+          animalId: selectedAnimal.id,
+          eventType: recordForm.eventType,
+          eventDate: recordForm.eventDate,
+          method: recordForm.method,
+          bullOrSemen: recordForm.bullOrSemen,
+          diagnosisResult: recordForm.diagnosisResult,
+          expectedCalvingDate: recordForm.expectedCalvingDate,
+          notes: recordForm.notes,
+          propertyId: selectedAnimal.propertyId,
+          producerId: selectedAnimal.producerId,
+          veterinarioId: vetUid,
+          createdByUserUid: vetUid,
+        });
+        resetRecordForm();
+        setRecordMessage("Registro reprodutivo salvo com sucesso.");
+      }
 
-      resetRecordForm();
-      setRecordMessage("Registro reprodutivo salvo com sucesso.");
       const updatedRecords = await getReproductionRecordsByVet(vetUid);
       onRecordsChange(updatedRecords);
     } catch (error) {
@@ -490,7 +560,9 @@ function ReproductionModule({
     <div className="w-full space-y-6">
       <CalvingAlerts records={records} />
       <div className="grid min-w-0 gap-5 lg:grid-cols-2 lg:gap-6">
-        <SectionCard title="Cadastrar animal / matriz">
+        <SectionCard
+          title={editingAnimalId ? "Editar animal / matriz" : "Cadastrar animal / matriz"}
+        >
           <form onSubmit={handleAnimalSubmit} className="space-y-4">
             <div>
               <label className="mb-1 block text-sm font-medium text-zinc-700">
@@ -624,13 +696,28 @@ function ReproductionModule({
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={savingAnimal || properties.length === 0}
-              className="w-full rounded-lg bg-zinc-900 py-3 font-medium text-white transition hover:bg-zinc-800 disabled:opacity-60"
-            >
-              {savingAnimal ? "Salvando..." : "Salvar animal"}
-            </button>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <button
+                type="submit"
+                disabled={savingAnimal || properties.length === 0}
+                className="flex-1 rounded-lg bg-zinc-900 py-3 font-medium text-white transition hover:bg-zinc-800 disabled:opacity-60"
+              >
+                {savingAnimal
+                  ? "Salvando..."
+                  : editingAnimalId
+                  ? "Atualizar animal"
+                  : "Salvar animal"}
+              </button>
+              {editingAnimalId && (
+                <button
+                  type="button"
+                  onClick={resetAnimalForm}
+                  className="rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition hover:bg-zinc-100"
+                >
+                  Cancelar
+                </button>
+              )}
+            </div>
           </form>
 
           {properties.length === 0 && (
@@ -652,7 +739,9 @@ function ReproductionModule({
           />
         </SectionCard>
 
-        <SectionCard title="Registrar evento reprodutivo">
+        <SectionCard
+          title={editingRecordId ? "Editar evento reprodutivo" : "Registrar evento reprodutivo"}
+        >
           <form onSubmit={handleRecordSubmit} className="space-y-4">
             <div>
               <label className="mb-1 block text-sm font-medium text-zinc-700">
@@ -798,13 +887,28 @@ function ReproductionModule({
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={savingRecord || animals.length === 0}
-              className="w-full rounded-lg bg-zinc-900 py-3 font-medium text-white transition hover:bg-zinc-800 disabled:opacity-60"
-            >
-              {savingRecord ? "Salvando..." : "Salvar evento"}
-            </button>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <button
+                type="submit"
+                disabled={savingRecord || animals.length === 0}
+                className="flex-1 rounded-lg bg-zinc-900 py-3 font-medium text-white transition hover:bg-zinc-800 disabled:opacity-60"
+              >
+                {savingRecord
+                  ? "Salvando..."
+                  : editingRecordId
+                  ? "Atualizar evento"
+                  : "Salvar evento"}
+              </button>
+              {editingRecordId && (
+                <button
+                  type="button"
+                  onClick={resetRecordForm}
+                  className="rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition hover:bg-zinc-100"
+                >
+                  Cancelar
+                </button>
+              )}
+            </div>
           </form>
 
           {animals.length === 0 && (
@@ -911,6 +1015,13 @@ function ReproductionModule({
                     Nascimento: {formatDateBR(animal.birthDate)}
                   </p>
                 )}
+
+                <button
+                  onClick={() => handleEditAnimal(animal)}
+                  className="mt-3 w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 sm:w-auto"
+                >
+                  Editar
+                </button>
               </div>
             ))}
           </div>
@@ -1025,6 +1136,13 @@ function ReproductionModule({
                     </p>
                   </div>
                 )}
+
+                <button
+                  onClick={() => handleEditRecord(record)}
+                  className="mt-3 w-full rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100 sm:w-auto"
+                >
+                  Editar
+                </button>
               </div>
             ))}
           </div>
