@@ -145,7 +145,7 @@ function EmptyState({ text }) {
   return <p className="text-zinc-500">{text}</p>;
 }
 
-function VetDashboard({ userData, authUser, onLogout }) {
+function VetDashboard({ userData, authUser, onLogout, isAdmin, onSwitchToAdmin }) {
   const [propertyForm, setPropertyForm] = useState(initialPropertyForm);
   const [producerForm, setProducerForm] = useState(initialProducerForm);
   const [taskForm, setTaskForm] = useState(initialTaskForm);
@@ -813,6 +813,17 @@ function VetDashboard({ userData, authUser, onLogout }) {
             <p className="text-xs font-medium text-zinc-500 truncate">{userData.name}</p>
             <p className="text-xs text-zinc-400 truncate">{userData.email}</p>
           </div>
+          {isAdmin && (
+            <button
+              onClick={onSwitchToAdmin}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 transition"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/>
+              </svg>
+              Painel Admin
+            </button>
+          )}
           <button
             onClick={onLogout}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 transition"
@@ -880,8 +891,16 @@ function VetDashboard({ userData, authUser, onLogout }) {
                 </div>
               </div>
 
-              {/* Botão Sair visível só no mobile (sidebar não existe) */}
-              <div className="lg:hidden">
+              {/* Botões visíveis só no mobile (sidebar não existe) */}
+              <div className="lg:hidden space-y-3">
+                {isAdmin && (
+                  <button
+                    onClick={onSwitchToAdmin}
+                    className="w-full rounded-lg border border-zinc-300 py-3 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition"
+                  >
+                    Painel Admin
+                  </button>
+                )}
                 <button
                   onClick={onLogout}
                   className="w-full rounded-lg border border-zinc-300 py-3 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition"
