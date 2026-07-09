@@ -10,6 +10,7 @@ import {
 } from "../services/occurrence";
 import { getAnimalsByProducer } from "../services/animal";
 import { getReproductionRecordsByProducer } from "../services/reproduction";
+import { sendPushNotification } from "../services/notify";
 import {
   formatDateBR,
   getOccurrenceStatusBadgeClass,
@@ -290,6 +291,15 @@ function ProducerDashboard({ userData, onLogout }) {
         veterinarioId: selectedProperty.veterinarioId,
         createdByUserUid: profileId,
       });
+
+      if (selectedProperty.veterinarioId) {
+        sendPushNotification({
+          userId: selectedProperty.veterinarioId,
+          title: "Nova ocorrência registrada",
+          body: `${producerRecord.name}: ${occurrenceForm.title}`,
+          url: "/",
+        });
+      }
 
       resetOccurrenceForm();
       setOccurrenceMessage("Ocorrência registrada com sucesso.");

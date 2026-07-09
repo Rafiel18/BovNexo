@@ -81,6 +81,34 @@ export async function getProducersByVet(veterinarioId) {
   }));
 }
 
+export async function getProducerById(producerId) {
+  const { data, error } = await supabase
+    .from("producers")
+    .select("*")
+    .eq("id", producerId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Erro Supabase ao buscar produtor por id:", error);
+    throw error;
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    veterinarioId: data.veterinario_id,
+    linkedUserUid: data.linked_user_uid,
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
+  };
+}
+
 export async function getProducerByEmail(email) {
   const normalizedEmail = email.trim().toLowerCase();
 

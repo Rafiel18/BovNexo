@@ -10,6 +10,7 @@ import {
 
 import {
   createProducer,
+  getProducerById,
   getProducersByVet,
   updateProducer,
 } from "../services/producer";
@@ -24,6 +25,7 @@ import {
 
 import { getAnimalsByVet } from "../services/animal";
 import { getReproductionRecordsByVet } from "../services/reproduction";
+import { sendPushNotification } from "../services/notify";
 
 import {
   formatDateBR,
@@ -565,6 +567,23 @@ function VetDashboard({ userData, authUser, onLogout, isAdmin, onSwitchToAdmin }
     try {
       await updateOccurrenceResponse(occurrenceId, responseText, vetUid);
       setOccurrenceMessage("Resposta da ocorrência salva com sucesso.");
+
+      const occurrence = occurrences.find((item) => item.id === occurrenceId);
+      if (occurrence?.producerId) {
+        getProducerById(occurrence.producerId)
+          .then((producer) => {
+            if (producer?.linkedUserUid) {
+              sendPushNotification({
+                userId: producer.linkedUserUid,
+                title: "Sua ocorrência foi respondida",
+                body: `${occurrence.title}: resposta do veterinário disponível.`,
+                url: "/",
+              });
+            }
+          })
+          .catch((err) => console.error("Erro ao notificar produtor:", err));
+      }
+
       await loadOccurrences();
     } catch (error) {
       console.error("Erro ao salvar resposta da ocorrência:", error);
