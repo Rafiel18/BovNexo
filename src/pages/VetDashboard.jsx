@@ -213,12 +213,18 @@ function VetDashboard({ userData, authUser, onLogout, isAdmin, onSwitchToAdmin }
         value:
           userData.approvalStatus === "pending"
             ? "Aguardando validação"
-            : userData.approvalStatus || "Não definido",
+            : userData.approvalStatus === "approved"
+            ? "Aprovado"
+            : userData.approvalStatus === "rejected"
+            ? "Rejeitado"
+            : "Não definido",
         valueClassName:
           userData.approvalStatus === "pending"
             ? "text-amber-600"
             : userData.approvalStatus === "approved"
             ? "text-green-700"
+            : userData.approvalStatus === "rejected"
+            ? "text-red-700"
             : "text-zinc-800",
       },
       {
