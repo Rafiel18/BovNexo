@@ -9,6 +9,13 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.js",
+      injectManifest: {
+        swSrc: "src/sw.js",
+        swDest: "dist/sw.js",
+      },
       includeAssets: ["favicon.svg", "apple-touch-icon.png"],
       manifest: {
         name: "BovNexo - Gestão Pecuária",
@@ -38,14 +45,6 @@ export default defineConfig({
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
-          },
-        ],
-      },
-      workbox: {
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) => url.hostname.endsWith("supabase.co"),
-            handler: "NetworkOnly",
           },
         ],
       },

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import ReproductionModule from "../components/ReproductionModule";
+import NotificationToggle from "../components/NotificationToggle";
 
 import {
   createProperty,
@@ -830,6 +831,7 @@ function VetDashboard({ userData, authUser, onLogout, isAdmin, onSwitchToAdmin }
               Painel Admin
             </button>
           )}
+          <NotificationToggle userId={vetUid} />
           <button
             onClick={onLogout}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 transition"
@@ -907,6 +909,7 @@ function VetDashboard({ userData, authUser, onLogout, isAdmin, onSwitchToAdmin }
                     Painel Admin
                   </button>
                 )}
+                <NotificationToggle userId={vetUid} variant="block" />
                 <button
                   onClick={onLogout}
                   className="w-full rounded-lg border border-zinc-300 py-3 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition"

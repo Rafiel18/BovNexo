@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import ProducerReproductionModule from "../components/ProducerReproductionModule";
+import NotificationToggle from "../components/NotificationToggle";
 import { completeTask, getTasksByProducer } from "../services/task";
 import { getProducerByEmail, linkProducerToUser } from "../services/producer";
 import { getPropertiesByProducer } from "../services/property";
@@ -479,6 +480,7 @@ function ProducerDashboard({ userData, onLogout }) {
             <p className="text-xs font-medium text-zinc-500 truncate">{userData.name}</p>
             <p className="text-xs text-zinc-400 truncate">{userData.email}</p>
           </div>
+          <NotificationToggle userId={userData.id} />
           <button
             onClick={onLogout}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 transition"
@@ -534,7 +536,8 @@ function ProducerDashboard({ userData, onLogout }) {
                 </div>
               </div>
 
-              <div className="lg:hidden">
+              <div className="lg:hidden space-y-3">
+                <NotificationToggle userId={userData.id} variant="block" />
                 <button onClick={onLogout} className="w-full rounded-lg border border-zinc-300 py-3 text-sm font-medium text-zinc-700 hover:bg-zinc-100 transition">
                   Sair
                 </button>
